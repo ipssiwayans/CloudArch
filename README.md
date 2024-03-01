@@ -48,4 +48,4 @@ CloudArch est sous licence MIT. Consultez le fichier LICENSE pour plus de détai
 Contact
 -------
 
-Si vous avez des questions ou des commentaires sur CloudArch, n'hésitez pas à nous contacter à [example@example.com](mailto:example@example.com).
+Si vous avez des questions ou des commentaires sur CloudArch, n'hésitez pas à nous contacter à [support@cloudarch.com](mailto:support@clourdarch.com).
