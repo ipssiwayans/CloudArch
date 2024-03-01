@@ -1,7 +1,8 @@
 CloudArch - Plateforme de gestion de fichiers clients sécurisée
 ==============================================================
+
 <p align="center">
-  ![Logo CloudArch](https://github.com/ipssiwayans/CloudArch/raw/main/assets/images/logoWhite.png)
+  <img src="https://github.com/ipssiwayans/CloudArch/raw/main/assets/images/logoWhite.png" alt="Logo CloudArch" width="200">
 </p>
 
 
