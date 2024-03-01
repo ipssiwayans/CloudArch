@@ -8,10 +8,18 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class AccessController extends AbstractController
 {
-    #[Route('/access', name: 'app_access')]
+    #[Route('/login', name: 'app_login')]
     public function index(): Response
     {
-        return $this->render('access/index.html.twig', [
+        return $this->render('access/login.html.twig', [
+            'controller_name' => 'AccessController',
+        ]);
+    }
+
+    #[Route('/logout', name: 'app_logout')]
+    public function logout(): Response
+    {
+        return $this->render('access/logout.html.twig', [
             'controller_name' => 'AccessController',
         ]);
     }
