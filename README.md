@@ -27,7 +27,7 @@ Technologies utilisées
 * Symfony pour le développement backend
 * Twig pour le développement frontend
 * API Google Drive pour le stockage de fichiers
-* Bootstrap pour le design responsive et moderne
+* Bootstrap pour le design responsive
 
 Installation
 ------------
@@ -36,7 +36,7 @@ Installation
 2. Installer les dépendances à l'aide de Composer
 3. Configurer les paramètres de la base de données et de l'API Google Drive dans le fichier .env
 4. Exécuter les migrations de la base de données
-5. Lancer l'application à l'aide de la commande `php bin/console server:run`
+5. Lancer l'application à l'aide de la commande `php bin/console server:start`
 
 Contribution
 ------------
