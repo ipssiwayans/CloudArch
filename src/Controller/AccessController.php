@@ -16,10 +16,10 @@ class AccessController extends AbstractController
         ]);
     }
 
-    #[Route('/logout', name: 'app_logout')]
+    #[Route('/signup', name: 'app_signup')]
     public function logout(): Response
     {
-        return $this->render('access/logout.html.twig', [
+        return $this->render('access/sign_up.html.twig', [
             'controller_name' => 'AccessController',
         ]);
     }

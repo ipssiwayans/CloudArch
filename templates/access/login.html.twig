@@ -8,7 +8,7 @@
         <div class="card radius-10">
           <div class="card-body p-4">
             <div class="mx-auto my-auto d-flex align-items-center justify-content-center">
-              <img src="{{ asset('/images/logoWhite.png') }}" alt="logo archcloud" width="150">
+              <img src="{{ asset('/images/logoWhite.png') }}" alt="logo ArchCloud" width="150">
             </div>
             <div class="text-center">
               <h4>Page de connexion</h4>
@@ -50,7 +50,7 @@
                 </div>
               </div>
               <div class="col-12 col-lg-12 text-center">
-                <p class="mb-0">Vous n'avez pas de compte ?<a href="sign_up.html.twig">Créer un compte</a></p>
+                <p class="mb-0">Vous n'avez pas de compte ?<a href="{{ path('app_signup') }}">Créer un compte</a></p>
               </div>
             </form>
           </div>
