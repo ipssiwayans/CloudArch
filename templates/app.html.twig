@@ -7,25 +7,25 @@
             <meta name="viewport" content="width=device-width, initial-scale=1">
 
             <!-- loader-->
-            <link href="{{ asset('styles/pace.min.css') }}" rel="stylesheet" />
-            <script src="{{ asset('js/pace.min.js') }}"></script>
+            <link href="{{ asset('assets/css/pace.min.css') }}" rel="stylesheet" />
+            <script src="{{ asset('assets/js/pace.min.js') }}"></script>
 
             <!--plugins-->
-            <link href="{{ asset('plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet" />
-            <link href="{{ asset('plugins/simplebar/css/simplebar.css') }}" rel="stylesheet" />
-            <link href="{{ asset('plugins/metismenu/css/metisMenu.min.css') }}" rel="stylesheet" />
+            <link href="{{ asset('assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet" />
+            <link href="{{ asset('assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet" />
+            <link href="{{ asset('assets/plugins/metismenu/css/metisMenu.min.css') }}" rel="stylesheet" />
 
             <!-- CSS Files -->
-            <link href="{{ asset('styles/bootstrap.min.css') }}" rel="stylesheet">
-            <link href="{{ asset('styles/bootstrap-extended.css') }}" rel="stylesheet">
-            <link href="{{ asset('styles/style.css') }}" rel="stylesheet">
-            <link href="{{ asset('styles/icons.css') }}" rel="stylesheet">
+            <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+            <link href="{{ asset('assets/css/bootstrap-extended.css') }}" rel="stylesheet">
+            <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+            <link href="{{ asset('assets/css/icons.css') }}" rel="stylesheet">
             <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
             <!--Theme Styles-->
-            <link href="{{ asset('styles/dark-theme.css') }}" rel="stylesheet" />
-            <link href="{{ asset('styles/semi-dark.css') }}" rel="stylesheet" />
-            <link href="{{ asset('styles/header-colors.css') }}" rel="stylesheet" />
+            <link href="{{ asset('assets/css/dark-theme.css') }}" rel="stylesheet" />
+            <link href="{{ asset('assets/css/semi-dark.css') }}" rel="stylesheet" />
+            <link href="{{ asset('assets/css/header-colors.css') }}" rel="stylesheet" />
 
             <title>Homepage</title>
         </head>
@@ -39,7 +39,7 @@
                 <aside class="sidebar-wrapper" data-simplebar="true">
                     <div class="sidebar-header">
                         <div>
-                            <img src="{{ asset('/images/logo-icon-2.png') }}" class="logo-icon" alt="logo icon">
+                            <img src="{{ asset('assets/images/logo-icon-2.png') }}" class="logo-icon" alt="logo icon">
                         </div>
                         <div>
                             <h4 class="logo-text">SYN-UI</h4>
@@ -815,24 +815,24 @@
         {# end wrapper #}
         {% block scripts %}
             <!-- JS Files-->
-            <script src="{{ asset('js/jquery.min.js') }}"></script>
-            <script src="{{ asset('plugins/simplebar/js/simplebar.min.js') }}"></script>
-            <script src="{{ asset('plugins/metismenu/js/metisMenu.min.js') }}"></script>
-            <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+            <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+            <script src="{{ asset('assets/plugins/simplebar/js/simplebar.min.js') }}"></script>
+            <script src="{{ asset('assets/plugins/metismenu/js/metisMenu.min.js') }}"></script>
+            <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
             <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
             <!--plugins-->
-            <script src="{{ asset('plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
+            <script src="{{ asset('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
 
             <!-- Easy Pie Chart JS -->
-            <script src="{{ asset('plugins/jquery.easy-pie-chart/jquery.easypiechart.min.js') }}"></script>
-            <script src="{{ asset('plugins/jquery.easy-pie-chart/easy-pie-chart.init.js') }}"></script>
+            <script src="{{ asset('assets/plugins/jquery.easy-pie-chart/jquery.easypiechart.min.js') }}"></script>
+            <script src="{{ asset('assets/plugins/jquery.easy-pie-chart/easy-pie-chart.init.js') }}"></script>
 
             <!-- KNOB JS -->
             <!--[if IE]>
-            <script type="text/javascript" src="{{ asset('/plugins/jquery-knob/excanvas.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('assets/plugins/jquery-knob/excanvas.js') }}"></script>
             <![endif]-->
-            <script src="{{ asset('plugins/jquery-knob/excanvas.js') }}"></script>
-            <script src="{{ asset('plugins/jquery-knob/jquery.knob.js') }}"></script>
+            <script src="{{ asset('assets/plugins/jquery-knob/excanvas.js') }}"></script>
+            <script src="{{ asset('assets/plugins/jquery-knob/jquery.knob.js') }}"></script>
 
             <script>
                 $(function () {
@@ -841,8 +841,9 @@
             </script>
 
             <!-- Main JS-->
-            <script src="{{  asset('/js/main.js') }}"></script>
+            <script src="{{  asset('assets/js/main.js') }}"></script>
         {% endblock %}
     </body>
 </html>
+{# verifié script et style#}
 ```
