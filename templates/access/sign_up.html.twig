@@ -11,42 +11,42 @@
                 <h4>S'inscrire</h4>
                 <p>Créer un compte</p>
               </div>
-              <form class="form-body row g-3">
+              <form class="form-body row g-3 action"{{ path('app_signup') }} method="post">
                 <div class="col-12">
-                  <label for="inputName" class="form-label">Prénom</label>
-                  <input type="text" class="form-control" id="inputName">
+                  <label for="inputFirstName" class="form-label">Prénom</label>
+                  <input type="text" class="form-control" id="inputFirstName" name="firstname">
                 </div>
                 <div class="col-12">
-                  <label for="inputName" class="form-label">Nom</label>
-                  <input type="text" class="form-control" id="inputName">
+                  <label for="inputLastName" class="form-label">Nom</label>
+                  <input type="text" class="form-control" id="inputLastName" name="lastname">
                 </div>
                 <div class="col-12">
                   <label for="inputEmail" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="inputEmail">
+                  <input type="email" class="form-control" id="inputEmail" name="email">
                 </div>
                 <div class="col-12">
                   <label for="inputPassword" class="form-label">Mot de passe</label>
-                  <input type="password" class="form-control" id="inputPassword">
+                  <input type="password" class="form-control" id="inputPassword" name="password">
                 </div>
                 <div class="col-4">
                   <label for="inputStreetNumber" class="form-label">Numéro de rue</label>
-                  <input type="number" class="form-control" id="inputStreetNumber">
+                  <input type="number" class="form-control" id="inputStreetNumber" name="streetnumber">
                 </div>
                 <div class="col-8">
                   <label for="inputStreetName" class="form-label">Nom de rue</label>
-                    <input type="text" class="form-control" id="inputStreetName">
+                    <input type="text" class="form-control" id="inputStreetName" name="streetname">
                 </div>
                 <div class="col-12">
-                  <label for="inputZip" class="form-label">Code postal</label>
-                  <input type="number" class="form-control" id="inputZip">
+                  <label for="inputZipCode" class="form-label">Code postal</label>
+                  <input type="number" class="form-control" id="inputZipCode" name="zipcode">
                 </div>
                 <div class="col-12">
                   <label for="inputCity" class="form-label">Ville</label>
-                  <input type="text" class="form-control" id="inputCity">
+                  <input type="text" class="form-control" id="inputCity" name="city">
                 </div>
                 <div class="col-12">
                   <label for="inputCountry" class="form-label">Pays</label>
-                  <select class="form-control" id="inputCountry">
+                  <select class="form-control" id="inputCountry" name="country">
                     <option value="">Sélectionnez un pays</option>
                     {% for code, country in countries %}
                       <option value="{{ country }}">{{ country }}</option>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="col-12 col-lg-12">
                   <div class="d-grid">
-                    <button type="button" class="btn btn-primary">S'inscrire</button>
+                    <button type="submit" class="btn btn-primary">S'inscrire</button>
                   </div>
                 </div>
                 <div class="col-12 col-lg-12">
