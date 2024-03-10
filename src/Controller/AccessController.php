@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,78 +21,32 @@ class AccessController extends AbstractController
         ]);
     }
 
-    #[Route('/signup', name: 'app_signup')]
+    #[Route('/registration', name: 'app_registration')]
     public function signup(Request $request,EntityManagerInterface $entityManager,UserPasswordHasherInterface $passwordHasher): Response
     {
         $countries = Countries::getNames();
-        if($request->isMethod('post')){
-            $user = new User();
+        $user = new User();
 
-            $firstname = $request->request->get('firstname');
-            if (null === $firstname) {
-                throw new \Exception('Firstname is required');
-            }
-            $user->setFirstname($firstname);
+        $form = $this->createForm(RegistrationFormType::class, $user);
 
-            $lastname = $request->request->get('lastname');
-            if (null === $lastname) {
-                throw new \Exception('Lastname is required');
-            }
-            $user->setLastname($lastname);
+        $form->handleRequest($request);
 
-            $email = $request->request->get('email');
-            if (null === $email) {
-                throw new \Exception('Email is required');
-            }
-            $user->setEmail($email);
-
-            $password = $request->request->get('password');
-            if (null === $password) {
-                throw new \Exception('Password is required');
-            }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $form->get('password')->getData();
             $hashedPassword = $passwordHasher->hashPassword($user, $password);
             $user->setPassword($hashedPassword);
 
-            $streetNumber = $request->request->get('streetnumber');
-            if (null === $streetNumber) {
-                throw new \Exception('Street number is required');
-            }
-            $user->setStreetNumber($streetNumber);
-
-            $streetAddress = $request->request->get('streetname');
-            if (null === $streetAddress) {
-                throw new \Exception('Street address is required');
-            }
-            $user->setStreetAddress($streetAddress);
-
-            $zipCode = $request->request->get('zipcode');
-            if (null === $zipCode) {
-                throw new \Exception('Zip code is required');
-            }
-            $user->setPostalCode($zipCode);
-
-            $city = $request->request->get('city');
-            if (null === $city) {
-                throw new \Exception('City is required');
-            }
-            $user->setCity($city);
-
-            $country = $request->request->get('country');
-            if (null === $country) {
-                throw new \Exception('Country is required');
-            }
-            $user->setCountry($country);
-
             $user->setTotalStorage(20);
-            $user->setRegistrationDate(new \DateTime('now'));
+            $user->setRegistrationDate(new \DateTime());
 
             $entityManager->persist($user);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_login');
         }
-        return $this->render('access/sign_up.html.twig', [
+        return $this->render('access/registration.html.twig', [
             'countries' => $countries,
+            'registrationForm' => $form->createView(),
         ]);
     }
 }
