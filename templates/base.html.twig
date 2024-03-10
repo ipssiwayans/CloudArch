@@ -2,10 +2,10 @@
 <html lang="fr" class="light-theme">
   <head>
     {% block head %}
-      <title>{% block title %}Cloud Arch{% endblock %}</title>
       <!-- Required meta tags -->
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{% block title %}Cloud Arch{% endblock %}</title>
     {% endblock %}
     {% block stylesheets %}
       <!--plugins-->
@@ -15,10 +15,11 @@
       <link href="{{ asset('assets/css/bootstrap-extended.css') }}" rel="stylesheet">
       <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
       <link href="{{ asset('assets/css/icons.css') }}" rel="stylesheet">
+      <link href="{{ asset('assets/css/custom.css') }}" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     {% endblock %}
     {% block javascripts %}
-      {% block importmap %}{{ importmap('app') }}{% endblock %}
+{#      {% block importmap %}{{ importmap('app') }}{% endblock %}#}
     {% endblock %}
   </head>
   <body>
