@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-12">
                   <label for="inputZip" class="form-label">Code postal</label>
-                  <input type="text" class="form-control" id="inputZip">
+                  <input type="number" class="form-control" id="inputZip">
                 </div>
                 <div class="col-12">
                   <label for="inputCity" class="form-label">Ville</label>
@@ -46,7 +46,12 @@
                 </div>
                 <div class="col-12">
                   <label for="inputCountry" class="form-label">Pays</label>
-                  <input type="text" class="form-control" id="inputCountry">
+                  <select class="form-control" id="inputCountry">
+                    <option value="">Sélectionnez un pays</option>
+                    {% for code, country in countries %}
+                      <option value="{{ country }}">{{ country }}</option>
+                    {% endfor %}
+                  </select>
                 </div>
                 <div class="col-12 col-lg-12">
                   <div class="form-check">
