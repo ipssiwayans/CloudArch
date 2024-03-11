@@ -14,18 +14,28 @@
               <h4>Page de connexion</h4>
               <p>Se connecter à votre compte</p>
             </div>
-            <form class="form-body row g-3">
+            <form class="form-body row g-3" method="post">
+              {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+              {% endif %}
+
+              {% if app.user %}
+                <div class="mb-3">
+                  You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                </div>
+              {% endif %}
               <div class="col-12">
                 <label for="inputEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="inputEmail">
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
               </div>
               <div class="col-12">
                 <label for="inputPassword" class="form-label">Mot de passe</label>
-                <input type="password" class="form-control" id="inputPassword">
+                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
               </div>
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
               <div class="col-12 col-lg-6">
                 <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckRemember">
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckRemember" name="_remember_me">
                   <label class="form-check-label" for="flexSwitchCheckRemember">Se souvenir de moi</label>
                 </div>
               </div>
@@ -34,7 +44,7 @@
               </div>
               <div class="col-12 col-lg-12">
                 <div class="d-grid">
-                  <button type="button" class="btn btn-primary">Se connecter</button>
+                  <button type="submit" class="btn btn-primary">Se connecter</button>
                 </div>
               </div>
               <div class="col-12 col-lg-12">
