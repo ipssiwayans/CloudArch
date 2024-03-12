@@ -1,17 +1,32 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
+<html lang="fr" class="light-theme">
+  <head>
+    {% block head %}
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{% block title %}Cloud Arch{% endblock %}</title>
+    {% endblock %}
+    {% block stylesheets %}
+      <!--plugins-->
+      <link href="{{ asset('assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet" />
+      <!-- CSS Files -->
+      <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+      <link href="{{ asset('assets/css/bootstrap-extended.css') }}" rel="stylesheet">
+      <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+      <link href="{{ asset('assets/css/icons.css') }}" rel="stylesheet">
+      <link href="{{ asset('assets/css/custom.css') }}" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    {% endblock %}
+    {% block javascripts %}
+{#      {% block importmap %}{{ importmap('app') }}{% endblock %}#}
+    {% endblock %}
+  </head>
+  <body>
+    {# include header#}
+    <main>
         {% block body %}{% endblock %}
-    </body>
+    </main>
+    {# include footer #}
+  </body>
 </html>
