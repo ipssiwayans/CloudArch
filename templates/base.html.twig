@@ -25,6 +25,13 @@
   <body>
     {# include header#}
     <main>
+        <div class="mx-auto my-auto d-flex align-items-center justify-content-center">
+        {% for type,messages in app.flashes %}
+            {% for msg in messages %}
+                <p class="alert alert-{{ type }}"> {{ msg }} </p>
+            {% endfor %}
+        {% endfor %}
+        </div>
         {% block body %}{% endblock %}
     </main>
     {# include footer #}

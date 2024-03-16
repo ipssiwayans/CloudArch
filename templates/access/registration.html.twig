@@ -18,48 +18,47 @@
             {{ form_start(registrationForm, {'attr': {'class': 'form-body row g-3'}}) }}
             <div class="col-12">
               {{ form_label(registrationForm.firstname) }}
-              {{ form_widget(registrationForm.firstname, {'attr': {'class': 'form-control'}}) }}
+              {{ form_widget(registrationForm.firstname) }}
               {{ form_errors(registrationForm.firstname) }}
             </div>
             <div class="col-12">
                 {{ form_label(registrationForm.lastname) }}
-                {{ form_widget(registrationForm.lastname, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(registrationForm.lastname) }}
                 {{ form_errors(registrationForm.lastname) }}
             </div>
             <div class="col-12">
               {{ form_label(registrationForm.email) }}
-                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(registrationForm.email) }}
                 {{ form_errors(registrationForm.email) }}
             </div>
             <div class="col-12">
                 {{ form_label(registrationForm.password) }}
-                {{ form_widget(registrationForm.password, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(registrationForm.password) }}
                 {{ form_errors(registrationForm.password) }}
             </div>
             <div class="col-4">
               {{ form_label(registrationForm.street_number) }}
-              {{ form_widget(registrationForm.street_number,{'attr': {'class' : 'form-control'}}) }}
+              {{ form_widget(registrationForm.street_number) }}
             </div>
             <div class="col-8">
                 {{ form_label(registrationForm.street_address) }}
-                {{ form_widget(registrationForm.street_address, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(registrationForm.street_address) }}
             </div>
-            {# Affichage des erreurs en dessous pour raison de mise en page #}
             <div class="mt-1">{{ form_errors(registrationForm.street_number) }}</div>
             <div class="mt-1">{{ form_errors(registrationForm.street_address) }}</div>
             <div class="col-12">
               {{ form_label(registrationForm.postal_code) }}
-              {{ form_widget(registrationForm.postal_code, {'attr': {'class': 'form-control'}}) }}
+              {{ form_widget(registrationForm.postal_code) }}
               {{ form_errors(registrationForm.postal_code) }}
             </div>
             <div class="col-12">
               {{ form_label(registrationForm.city) }}
-              {{ form_widget(registrationForm.city, {'attr': {'class': 'form-control'}}) }}
+              {{ form_widget(registrationForm.city) }}
               {{ form_errors(registrationForm.city) }}
             </div>
             <div class="col-12">
-                {{ form_label(registrationForm.country) }}
-              {{ form_widget(registrationForm.country,{'attr': {'class': 'form-control'}}) }}
+              {{ form_label(registrationForm.country) }}
+              {{ form_widget(registrationForm.country) }}
               {{ form_errors(registrationForm.country) }}
             </div>
             <div class="col-12 col-lg-12">
