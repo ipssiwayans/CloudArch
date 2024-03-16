@@ -22,4 +22,4 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Validate PSR-12 Code Style
-        run: ../../vendor/bin/phpcs
+        run: vendor/bin/phpcs
