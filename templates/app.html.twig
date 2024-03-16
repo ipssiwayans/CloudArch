@@ -27,7 +27,7 @@
             <link href="{{ asset('assets/css/semi-dark.css') }}" rel="stylesheet" />
             <link href="{{ asset('assets/css/header-colors.css') }}" rel="stylesheet" />
 
-            <title>Homepage</title>
+            <title>{% block title %}Accueil | Cloud Arch{% endblock %}</title>
         </head>
     {% endblock %}
 
@@ -731,7 +731,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
+                                            <a class="dropdown-item" href="{{ path('app_update') }}">
                                                 <div class="d-flex align-items-center">
                                                     <div class="">
                                                         <ion-icon name="settings-outline"></ion-icon>
@@ -795,6 +795,23 @@
             {% endblock %}
 
             {% block contentWrapper %}
+            <!-- start page content wrapper-->
+            <div class="page-content-wrapper">
+                <!-- start page content-->
+                <div class="page-content">
+                {% for type,messages in app.flashes %}
+                    {% for msg in messages %}
+                        <p class="alert alert-{{ type }}"> {{ msg }} </p>
+                    {% endfor %}
+                {% endfor %}
+
+                {% block content %}
+
+                {% endblock %}
+                </div>
+                <!-- end page content-->
+            </div>
+                <!-- end page content wrapper-->
             {% endblock %}
 
             {% block backToTop %}
