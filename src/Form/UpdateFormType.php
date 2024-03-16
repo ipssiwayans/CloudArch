@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\{IsTrue, Length, NotBlank, Email, Regex, Type};
 
-class RegistrationFormType extends AbstractType
+class UpdateFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -160,23 +160,10 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Le pays est requis.',
                     ]),
                 ],
-                'placeholder' => 'Sélectionnez un pays',
                 'attr' => [
                     'class' => 'form-control'
                 ]
-            ])
-        ->add('termsAgreed', CheckboxType::class, [
-            'label' => ' Je suis d\'accord avec les termes et conditions',
-            'mapped' => false, // Permet de ne pas lier cette propriété à aucune propriété de l'entité User
-            'constraints' => [
-                new IsTrue([
-                    'message' => 'Vous devez accepter les termes.',
-                ]),
-            ],
-            'required' => false,
-            'attr' => ['class' => 'form-check-input'],
-            'label_attr' => ['class' => 'form-check-label'],
-        ]);
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
