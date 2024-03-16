@@ -21,8 +21,8 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - name: Install Dependencies
-        run: composer install --prefer-dist --no-progress
+      - name: Install PHP_CodeSniffer composer package
+        run: composer global require "squizlabs/php_codesniffer*"
 
       - name: Validate PSR-12 Code Style
         run: vendor/bin/phpcs
