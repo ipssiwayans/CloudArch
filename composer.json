@@ -1,4 +1,6 @@
 {
+    "name": "symfony/skeleton",
+    "description": "The \"Symfony Standard Edition\" distribution",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
