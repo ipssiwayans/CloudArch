@@ -25,7 +25,7 @@ class AccessController extends AbstractController
         $this->security = $security;
     }
     #[Route('/registration', name: 'app_registration')]
-    public function signup(Request $request,EntityManagerInterface $entityManager,UserPasswordHasherInterface $passwordHasher): Response
+    public function signup(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         // Si l'utilisateur est déjà connecté, redirige vers la page de profil
         if ($this->security->isGranted('ROLE_USER')) {
