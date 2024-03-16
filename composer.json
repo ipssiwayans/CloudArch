@@ -52,7 +52,8 @@
         "allow-plugins": {
             "php-http/discovery": true,
             "symfony/flex": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "phpro/grumphp": true
         },
         "sort-packages": true
     },
@@ -99,8 +100,9 @@
         }
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.51",
+        "phpro/grumphp": "^2.5",
         "phpunit/phpunit": "^9.5",
-        "squizlabs/php_codesniffer": "^3.9",
         "symfony/browser-kit": "7.0.*",
         "symfony/css-selector": "7.0.*",
         "symfony/debug-bundle": "7.0.*",

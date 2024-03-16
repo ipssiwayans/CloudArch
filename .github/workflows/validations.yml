@@ -1,5 +1,13 @@
 name: "PHP CodeSniffer Validations"
-on: [ push, pull_request ]
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 jobs:
   validate-code-style:
     name: PSR-12 Code style
