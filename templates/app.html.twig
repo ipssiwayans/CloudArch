@@ -14,6 +14,7 @@
             <link href="{{ asset('assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet" />
             <link href="{{ asset('assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet" />
             <link href="{{ asset('assets/plugins/metismenu/css/metisMenu.min.css') }}" rel="stylesheet" />
+            <link href="{{ asset('assets/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
 
             <!-- CSS Files -->
             <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -721,7 +722,7 @@
                                             <hr class="dropdown-divider">
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="pages-user-profile.html">
+                                            <a class="dropdown-item" href="{{ path('app_profile') }}">
                                                 <div class="d-flex align-items-center">
                                                     <div class="">
                                                         <ion-icon name="person-outline"></ion-icon>
@@ -741,22 +742,22 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="index2.html">
+                                            <a class="dropdown-item" href="{{ path('app_file') }}">
                                                 <div class="d-flex align-items-center">
                                                     <div class="">
                                                         <ion-icon name="speedometer-outline"></ion-icon>
                                                     </div>
-                                                    <div class="ms-3"><span>Dashboard</span></div>
+                                                    <div class="ms-3"><span>Fichiers</span></div>
                                                 </div>
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
+                                            <a class="dropdown-item" href="{{ path('app_prices') }}">
                                                 <div class="d-flex align-items-center">
                                                     <div class="">
                                                         <ion-icon name="wallet-outline"></ion-icon>
                                                     </div>
-                                                    <div class="ms-3"><span>Earnings</span></div>
+                                                    <div class="ms-3"><span>Abonnements</span></div>
                                                 </div>
                                             </a>
                                         </li>
@@ -766,7 +767,7 @@
                                                     <div class="">
                                                         <ion-icon name="cloud-download-outline"></ion-icon>
                                                     </div>
-                                                    <div class="ms-3"><span>Downloads</span></div>
+                                                    <div class="ms-3"><span>Espace de stockage</span></div>
                                                 </div>
                                             </a>
                                         </li>
@@ -839,6 +840,9 @@
             <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
             <!--plugins-->
             <script src="{{ asset('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
+            <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+            <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
+            <script src="{{ asset('assets/js/table-datatable.js') }}"></script>
 
             <!-- Easy Pie Chart JS -->
             <script src="{{ asset('assets/plugins/jquery.easy-pie-chart/jquery.easypiechart.min.js') }}"></script>
