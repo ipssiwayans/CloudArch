@@ -98,18 +98,21 @@ class AccessController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $form->get('password')->getData();
-            if (!empty($password)) {
-                $hashedPassword = $passwordHasher->hashPassword($user, $password);
+            $oldPassword = $form->get('old_password')->getData();
+            $newPassword = $form->get('password')->getData();
+
+            if ($passwordHasher->isPasswordValid($user, $oldPassword)) {
+                $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
                 $user->setPassword($hashedPassword);
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Vos informations ont bien été mise à jour !');
+
+                return $this->redirectToRoute('app_update');
             }
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Vos informations ont bien été mise à jour !');
-
-            return $this->redirectToRoute('app_update');
+            $this->addFlash('danger', "L'ancien mot de passe est incorrect.");
         }
 
         return $this->render('access/update.html.twig', [

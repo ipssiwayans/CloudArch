@@ -52,9 +52,9 @@
                                     {{ form_errors(updateForm.firstname) }}
                                 </div>
                                 <div class="col-6">
-                                    {{ form_label(updateForm.email) }}
-                                    {{ form_widget(updateForm.email) }}
-                                    {{ form_errors(updateForm.email) }}
+                                    {{ form_label(updateForm.old_password) }}
+                                    {{ form_widget(updateForm.old_password) }}
+                                    {{ form_errors(updateForm.old_password) }}
                                 </div>
                                 <div class="col-6">
                                     {{ form_label(updateForm.lastname) }}
@@ -65,6 +65,11 @@
                                     {{ form_label(updateForm.password) }}
                                     {{ form_widget(updateForm.password) }}
                                     {{ form_errors(updateForm.password) }}
+                                </div>
+                                <div class="col-6">
+                                    {{ form_label(updateForm.email) }}
+                                    {{ form_widget(updateForm.email) }}
+                                    {{ form_errors(updateForm.email) }}
                                 </div>
                             </div>
 
