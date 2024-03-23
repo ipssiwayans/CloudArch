@@ -26,11 +26,10 @@ class AccessController extends AbstractController
     }
 
     #[Route('/registration', name: 'app_registration')]
-    public function signup(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function registration(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-        // Si l'utilisateur est déjà connecté, redirige vers la page de profil
         if ($this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_home'); // A remplacer par notre chemin vers la page de profil
+            return $this->redirectToRoute('app_home');
         }
 
         $countries = Countries::getNames();
@@ -63,7 +62,6 @@ class AccessController extends AbstractController
     #[Route(path: '/reset', name: 'app_reset_password')]
     public function resetPassword(): Response
     {
-        // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
@@ -75,7 +73,6 @@ class AccessController extends AbstractController
     #[Route('/profile', name: 'app_profile')]
     public function profile(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
@@ -89,7 +86,6 @@ class AccessController extends AbstractController
     #[Route('/update', name: 'app_update')]
     public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-        // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
@@ -125,7 +121,6 @@ class AccessController extends AbstractController
     #[Route('/delete', name: 'app_delete')]
     public function delete(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, SessionInterface $session): Response
     {
-        // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
@@ -135,7 +130,6 @@ class AccessController extends AbstractController
         $entityManager->remove($user);
         $entityManager->flush();
 
-        // Déconnecte l'utilisateur après la suppression
         $tokenStorage->setToken(null);
         $session->invalidate();
 
