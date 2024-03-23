@@ -6,15 +6,15 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\UpdateFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Intl\Countries;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Intl\Countries;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AccessController extends AbstractController
 {
@@ -24,6 +24,7 @@ class AccessController extends AbstractController
     {
         $this->security = $security;
     }
+
     #[Route('/registration', name: 'app_registration')]
     public function signup(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
@@ -52,9 +53,36 @@ class AccessController extends AbstractController
 
             return $this->redirectToRoute('app_login');
         }
+
         return $this->render('access/registration.html.twig', [
             'countries' => $countries,
             'registrationForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route(path: '/reset', name: 'app_reset_password')]
+    public function resetPassword(): Response
+    {
+        // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('app_login');
+        }
+        $user = $this->getUser();
+
+        return $this->render('access/reset.html.twig');
+    }
+
+    #[Route('/profile', name: 'app_profile')]
+    public function profile(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('app_login');
+        }
+        $user = $this->getUser();
+
+        return $this->render('access/profile.html.twig', [
+            'user' => $user,
         ]);
     }
 
@@ -87,6 +115,7 @@ class AccessController extends AbstractController
 
             return $this->redirectToRoute('app_update');
         }
+
         return $this->render('access/update.html.twig', [
             'countries' => $countries,
             'updateForm' => $form->createView(),

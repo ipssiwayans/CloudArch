@@ -6,5 +6,4 @@ grumphp:
                 'Mettez vos numéros de tickets (ex: "DEV-XXX: Lorem ipsum")': /((DEV|RUN)-\d+:.+|Merge .+)/
         phpcsfixer:
             config: .php-cs-fixer.php
-            triggered_by: [ 'php' ]
 

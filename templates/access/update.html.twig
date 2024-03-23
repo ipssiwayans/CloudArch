@@ -10,8 +10,8 @@
                 <div class="ps-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0 p-0 align-items-center">
-                            <li class="breadcrumb-item"><a href="{{ path('app_home') }}"><ion-icon name="home-outline"></ion-icon></a>
-                            </li>
+                            <li class="breadcrumb-item"><a href="{{ path('app_home') }}"><ion-icon name="home-outline"></ion-icon></a></li>
+                            <li class="breadcrumb-item"><a href="{{ path('app_profile') }}">Profil</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Modifier son profil</li>
                         </ol>
                     </nav>
@@ -36,60 +36,67 @@
                     <div class="card radius-10">
                         <div class="card-body">
                             {{ form_start(updateForm, {'attr': {'class': 'form-body row g-3'}}) }}
-                            <div class="col-12">
-                                {{ form_label(updateForm.firstname) }}
-                                {{ form_widget(updateForm.firstname) }}
-                                {{ form_errors(updateForm.firstname) }}
-                            </div>
-                            <div class="col-12">
-                                {{ form_label(updateForm.lastname) }}
-                                {{ form_widget(updateForm.lastname) }}
-                                {{ form_errors(updateForm.lastname) }}
-                            </div>
-                            <div class="col-12">
-                                {{ form_label(updateForm.email) }}
-                                {{ form_widget(updateForm.email) }}
-                                {{ form_errors(updateForm.email) }}
-                            </div>
-                            <div class="col-12">
-                                {{ form_label(updateForm.password) }}
-                                {{ form_widget(updateForm.password) }}
-                                {{ form_errors(updateForm.password) }}
-                            </div>
-                            <div class="col-4">
-                                {{ form_label(updateForm.street_number) }}
-                                {{ form_widget(updateForm.street_number) }}
-                            </div>
-                            <div class="col-8">
-                                {{ form_label(updateForm.street_address) }}
-                                {{ form_widget(updateForm.street_address) }}
-                            </div>
-                            <div class="mt-1">{{ form_errors(updateForm.street_number) }}</div>
-                            <div class="mt-1">{{ form_errors(updateForm.street_address) }}</div>
-                            <div class="col-12">
-                                {{ form_label(updateForm.postal_code) }}
-                                {{ form_widget(updateForm.postal_code) }}
-                                {{ form_errors(updateForm.postal_code) }}
-                            </div>
-                            <div class="col-12">
-                                {{ form_label(updateForm.city) }}
-                                {{ form_widget(updateForm.city) }}
-                                {{ form_errors(updateForm.city) }}
-                            </div>
-                            <div class="col-12">
-                                {{ form_label(updateForm.country) }}
-                                {{ form_widget(updateForm.country) }}
-                                {{ form_errors(updateForm.country) }}
-                            </div>
-                            <div class="col-6 col-lg-6">
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary">Modifier</button>
+                            <h5 class="mb-3 text-center">Modifier votre profil</h5>
+                            <h5 class="mb-0 mt-4">Informations personnelles</h5>
+                            <hr>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    {{ form_label(updateForm.firstname) }}
+                                    {{ form_widget(updateForm.firstname) }}
+                                    {{ form_errors(updateForm.firstname) }}
+                                </div>
+                                <div class="col-6">
+                                    {{ form_label(updateForm.email) }}
+                                    {{ form_widget(updateForm.email) }}
+                                    {{ form_errors(updateForm.email) }}
+                                </div>
+                                <div class="col-6">
+                                    {{ form_label(updateForm.lastname) }}
+                                    {{ form_widget(updateForm.lastname) }}
+                                    {{ form_errors(updateForm.lastname) }}
+                                </div>
+                                <div class="col-6">
+                                    {{ form_label(updateForm.password) }}
+                                    {{ form_widget(updateForm.password) }}
+                                    {{ form_errors(updateForm.password) }}
                                 </div>
                             </div>
-                            <div class="col-6 col-lg-6">
-                                <div class="d-grid">
-                                    <a href="{{ path('app_delete') }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')">Supprimer le compte</a>
+
+                            <h5 class="mb-0 mt-4">Informations de contacte</h5>
+                            <hr>
+                            <div class="row g-3">
+                                <div class="col-4">
+                                    {{ form_label(updateForm.street_number) }}
+                                    {{ form_widget(updateForm.street_number) }}
                                 </div>
+                                <div class="col-8">
+                                    {{ form_label(updateForm.street_address) }}
+                                    {{ form_widget(updateForm.street_address) }}
+                                </div>
+                                <div class="mt-1">{{ form_errors(updateForm.street_number) }}</div>
+                                <div class="mt-1">{{ form_errors(updateForm.street_address) }}</div>
+                                <div class="col-4">
+                                    {{ form_label(updateForm.postal_code) }}
+                                    {{ form_widget(updateForm.postal_code) }}
+                                    {{ form_errors(updateForm.postal_code) }}
+                                </div>
+                                <div class="col-4">
+                                    {{ form_label(updateForm.city) }}
+                                    {{ form_widget(updateForm.city) }}
+                                    {{ form_errors(updateForm.city) }}
+                                </div>
+                                <div class="col-4">
+                                    {{ form_label(updateForm.country) }}
+                                    {{ form_widget(updateForm.country) }}
+                                    {{ form_errors(updateForm.country) }}
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="text-end mt-3">
+                                    <button type="submit" class="btn btn-primary px-4">Modifier</button>
+                                    <a href="{{ path('app_delete') }}" class="btn btn-danger px-4" onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')">Supprimer le compte</a>
+                                </div>
+                            </div>
                             {{ form_end(updateForm) }}
                         </div>
                     </div>

@@ -13,4 +13,16 @@ class HomeController extends AbstractController
     {
         return $this->render('app.html.twig', []);
     }
+
+    #[Route('/prices', name: 'app_prices')]
+    public function prices(): Response
+    {
+        return $this->render('prices/prices.html.twig', []);
+    }
+
+    #[Route('/complete', name: 'app_complete')]
+    public function complete(): Response
+    {
+        return $this->render('prices/complete.html.twig', []);
+    }
 }
