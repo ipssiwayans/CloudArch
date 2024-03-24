@@ -4,14 +4,17 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -67,25 +70,38 @@ class UpdateFormType extends AbstractType
                     'class' => 'form-control',
                 ],
             ])
+            ->add('change_password', CheckboxType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Changer le mot de passe',
+                'attr' => [
+                    'class' => 'change-password-checkbox form-check-input',
+                ],
+            ])
             ->add('old_password', PasswordType::class, [
                 'mapped' => false,
+                'required' => false,
                 'label' => 'Ancien mot de passe',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'L\'ancien mot de passe est requis.',
+                        'groups' => ['password_change'],
                     ]),
                 ],
                 'attr' => [
                     'placeholder' => 'Entrez votre ancien mot de passe',
                     'class' => 'form-control',
+                    'disabled' => true,
                 ],
             ])
             ->add('password', PasswordType::class, [
                 'mapped' => false,
+                'required' => false,
                 'label' => 'Nouveau mot de passe',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Le nouveau mot de passe est requis.',
+                        'groups' => ['password_change'],
                     ]),
                     new Length([
                         'min' => 8,
@@ -96,6 +112,7 @@ class UpdateFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Entrez votre nouveau mot de passe',
                     'class' => 'form-control',
+                    'disabled' => true,
                 ],
             ])
             ->add('street_number', NumberType::class, [
@@ -173,6 +190,24 @@ class UpdateFormType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'form-control',
+                ],
+            ])
+            ->add('image', FileType::class, [
+                'label' => 'Image (fichier PNG ou JPG)',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (PNG ou JPG)',
+                    ]),
+                ],
+                'attr' => [
+                    'class' => 'btn btn-outline-primary btn-sm radius-30 px-4',
                 ],
             ]);
     }

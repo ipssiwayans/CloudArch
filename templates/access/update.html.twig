@@ -34,14 +34,24 @@
             <div class="row">
                 <div class="col-lg-8 mx-auto">
                     <div class="card radius-10">
+                            {{ form_start(updateForm) }}
                         <div class="mb-4 d-flex flex-column gap-3 align-items-center justify-content-center">
                             <div class="user-change-photo shadow">
-                                <img src="assets/images/avatars/06.png" alt="...">
+                                {% if user.imageFilename %}
+                                    <img src="{{ asset('uploads/images/' ~ user.imageFilename) }}" alt="User image">
+                                {% else %}
+                                    <img src="{{ asset('assets/images/avatars/06.png') }}" alt="Default image">
+                                {% endif %}
                             </div>
-                            <button type="button" class="btn btn-outline-primary btn-sm radius-30 px-4"><ion-icon name="image-sharp"></ion-icon>Change Photo</button>
+                            <label for="update_form_image" class="btn btn-outline-primary btn-sm radius-30 px-4">
+                                <ion-icon name="image-sharp"></ion-icon>Changer d'image
+                                {{ form_widget(updateForm.image, {'attr': {'style': 'display: none;'}}) }}
+                            </label>
+                            {{ form_label(updateForm.image) }}
+                            {{ form_errors(updateForm.image) }}
                         </div>
-                        <div class="card-body">
-                            {{ form_start(updateForm, {'attr': {'class': 'form-body row g-3'}}) }}
+                        <div class="card-body form-body row g-3">
+
                             <h5 class="mb-3 text-center">Modifier votre profil</h5>
                             <h5 class="mb-0 mt-4">Informations personnelles</h5>
                             <hr>
@@ -71,6 +81,11 @@
                                     {{ form_widget(updateForm.email) }}
                                     {{ form_errors(updateForm.email) }}
                                 </div>
+                            </div>
+                            <div class="col-6">
+                                {{ form_label(updateForm.change_password) }}
+                                {{ form_widget(updateForm.change_password) }}
+                                {{ form_errors(updateForm.change_password) }}
                             </div>
 
                             <h5 class="mb-0 mt-4">Informations de contacte</h5>
@@ -114,4 +129,39 @@
                 </div>
             </div>
             <!--end row-->
+{% endblock %}
+
+{% block scriptsPerso %}
+    <script defer>
+        // Permet de choisir si on change le mot de passe ou non
+        document.addEventListener('DOMContentLoaded', function() {
+            var checkbox = document.querySelector('.change-password-checkbox');
+            var oldPasswordInput = document.querySelector('input[name="update_form[old_password]"]');
+            var newPasswordInput = document.querySelector('input[name="update_form[password]"]');
+
+            checkbox.addEventListener('change', function() {
+                oldPasswordInput.disabled = !this.checked;
+                newPasswordInput.disabled = !this.checked;
+                oldPasswordInput.required = this.checked;
+                newPasswordInput.required = this.checked;
+            });
+        });
+
+        // Afficher l'image avant la soumission du formulaire
+        document.addEventListener('DOMContentLoaded', function() {
+            var imageInput = document.querySelector('input[name="update_form[image]"]');
+            var imagePreview = document.querySelector('.user-change-photo img');
+
+            imageInput.addEventListener('change', function() {
+                var file = this.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
 {% endblock %}

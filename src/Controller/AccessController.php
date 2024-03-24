@@ -8,6 +8,7 @@ use App\Form\UpdateFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -15,6 +16,7 @@ use Symfony\Component\Intl\Countries;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AccessController extends AbstractController
 {
@@ -84,7 +86,7 @@ class AccessController extends AbstractController
     }
 
     #[Route('/update', name: 'app_update')]
-    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
@@ -98,26 +100,67 @@ class AccessController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $oldPassword = $form->get('old_password')->getData();
-            $newPassword = $form->get('password')->getData();
+            $imageFile = $form->get('image')->getData();
 
-            if ($passwordHasher->isPasswordValid($user, $oldPassword)) {
-                $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
-                $user->setPassword($hashedPassword);
+            // this condition is needed because the 'image' field is not required
+            // so the image file must be processed only when a file is uploaded
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
 
-                $entityManager->persist($user);
+                // Move the file to the directory where images are stored
+                try {
+                    $imageFile->move(
+                        $this->getParameter('images_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'imageFilename' property to store the image file name
+                // instead of its contents
+                $user->setImageFilename($newFilename);
+            }
+
+            // On vérifie si l'utilisateur souhaite changer de mot de passe
+            if ($form->get('change_password')->getData()) {
+                $oldPassword = $form->get('old_password')->getData();
+                $newPassword = $form->get('password')->getData();
+
+                // On change le mot de passe si les champs sont remplis
+                if (!empty($oldPassword) && !empty($newPassword)) {
+                    // On valide les données du formulaire avec le groupe de validation 'password_change'
+                    $errors = $validator->validate($form->getData(), null, ['password_change']);
+
+                    // On vérifie si le mot de passe actuel est correct
+                    if ($passwordHasher->isPasswordValid($user, $oldPassword)) {
+                        $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+                        $user->setPassword($hashedPassword);
+
+                        $entityManager->flush();
+
+                        $this->addFlash('success', 'Vos informations ont bien été mise à jour !');
+                    } else {
+                        // On ajoute un message d'erreur si le mot de passe actuel est incorrect
+                        $this->addFlash('danger', "L'ancien mot de passe est incorrect.");
+                    }
+                }
+            } else {
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Vos informations ont bien été mise à jour !');
-
-                return $this->redirectToRoute('app_update');
             }
-            $this->addFlash('danger', "L'ancien mot de passe est incorrect.");
+
+            return $this->redirectToRoute('app_update');
         }
 
         return $this->render('access/update.html.twig', [
             'countries' => $countries,
             'updateForm' => $form->createView(),
+            'user' => $user,
         ]);
     }
 
