@@ -7,12 +7,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\{IsTrue, Length, NotBlank, Email, Regex, Type};
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UpdateFormType extends AbstractType
 {
@@ -32,8 +36,8 @@ class UpdateFormType extends AbstractType
                 ],
                 'attr' => [
                     'placeholder' => 'Entrez votre prénom',
-                    'class' => 'form-control'
-                ]
+                    'class' => 'form-control',
+                ],
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Nom',
@@ -48,8 +52,8 @@ class UpdateFormType extends AbstractType
                 ],
                 'attr' => [
                     'placeholder' => 'Entrez votre nom',
-                    'class' => 'form-control'
-                ]
+                    'class' => 'form-control',
+                ],
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
@@ -63,19 +67,42 @@ class UpdateFormType extends AbstractType
                 ],
                 'attr' => [
                     'placeholder' => 'Entrez votre email',
-                    'class' => 'form-control'
-                ]
+                    'class' => 'form-control',
+                ],
             ])
-            ->add('password', PasswordType::class, [
-                'label' => 'Mot de passe',
+            ->add('change_password', CheckboxType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Changer le mot de passe',
+                'attr' => [
+                    'class' => 'change-password-checkbox form-check-input',
+                ],
+            ])
+            ->add('old_password', PasswordType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Ancien mot de passe',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Le mot de passe est requis.',
+                        'message' => 'L\'ancien mot de passe est requis.',
+                        'groups' => ['password_change'],
                     ]),
-//                    new Regex([
-//                        'pattern' => '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
-//                        'message' => 'Le mot de passe doit contenir au moins 8 caractères et inclure au moins une lettre et un chiffre.',
-//                    ]),
+                ],
+                'attr' => [
+                    'placeholder' => 'Entrez votre ancien mot de passe',
+                    'class' => 'form-control',
+                    'disabled' => true,
+                ],
+            ])
+            ->add('password', PasswordType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Nouveau mot de passe',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le nouveau mot de passe est requis.',
+                        'groups' => ['password_change'],
+                    ]),
                     new Length([
                         'min' => 8,
                         'minMessage' => 'Votre mot de passe doit contenir au moins 8 caractères.',
@@ -83,9 +110,10 @@ class UpdateFormType extends AbstractType
                     ]),
                 ],
                 'attr' => [
-                    'placeholder' => 'Entrez votre mot de passe',
-                    'class' => 'form-control'
-                ]
+                    'placeholder' => 'Entrez votre nouveau mot de passe',
+                    'class' => 'form-control',
+                    'disabled' => true,
+                ],
             ])
             ->add('street_number', NumberType::class, [
                 'label' => 'Numéro de rue',
@@ -97,12 +125,12 @@ class UpdateFormType extends AbstractType
                     new Length([
                         'max' => 10,
                         'maxMessage' => 'Le numéro de rue ne peut pas dépasser 10 caractères.',
-                    ])
+                    ]),
                 ],
                 'attr' => [
                     'placeholder' => 'Numéro de rue',
-                    'class' => 'form-control'
-                ]
+                    'class' => 'form-control',
+                ],
             ])
             ->add('street_address', TextType::class, [
                 'label' => 'Nom de la rue',
@@ -117,8 +145,8 @@ class UpdateFormType extends AbstractType
                 ],
                 'attr' => [
                     'placeholder' => 'Entrez le nom de votre rue',
-                    'class' => 'form-control'
-                ]
+                    'class' => 'form-control',
+                ],
             ])
             ->add('postal_code', NumberType::class, [
                 'label' => 'Code postal',
@@ -134,8 +162,8 @@ class UpdateFormType extends AbstractType
                 ],
                 'attr' => [
                     'placeholder' => 'Entrez votre code postal',
-                    'class' => 'form-control'
-                ]
+                    'class' => 'form-control',
+                ],
             ])
             ->add('city', TextType::class, [
                 'label' => 'Ville',
@@ -150,8 +178,8 @@ class UpdateFormType extends AbstractType
                 ],
                 'attr' => [
                     'placeholder' => 'Entrez votre ville',
-                    'class' => 'form-control'
-                ]
+                    'class' => 'form-control',
+                ],
             ])
             ->add('country', CountryType::class, [
                 'label' => 'Pays',
@@ -161,8 +189,26 @@ class UpdateFormType extends AbstractType
                     ]),
                 ],
                 'attr' => [
-                    'class' => 'form-control'
-                ]
+                    'class' => 'form-control',
+                ],
+            ])
+            ->add('image', FileType::class, [
+                'label' => 'Image (fichier PNG ou JPG)',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (PNG ou JPG)',
+                    ]),
+                ],
+                'attr' => [
+                    'class' => 'btn btn-outline-primary btn-sm radius-30 px-4',
+                ],
             ]);
     }
 
