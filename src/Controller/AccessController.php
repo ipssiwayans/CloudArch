@@ -119,11 +119,13 @@ class AccessController extends AbstractController
 
                 // Sert à déplacer le fichier dans le répertoire où les images sont stockées
                 try {
-                    $imageFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
+                    $this->filesystem->copy(
+                        $imageFile->getPathname(),
+                        $this->getParameter('images_directory') . '/' . $newFilename,
+                        true
                     );
                 } catch (FileException $e) {
+                    // Gérer l'exception si nécessaire
                 }
 
                 $user->setImageFilename($newFilename);
