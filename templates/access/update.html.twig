@@ -36,7 +36,7 @@
                     <div class="card radius-10">
                             {{ form_start(updateForm) }}
                         <div class="mb-4 d-flex flex-column gap-3 align-items-center justify-content-center">
-                            <div class="user-change-photo shadow">
+                            <div class="user-change-photo shadow mt-4">
                                 {% if user.imageFilename %}
                                     <img src="{{ asset('uploads/images/' ~ user.imageFilename) }}" alt="User image">
                                 {% else %}
@@ -132,9 +132,9 @@
     <script defer>
         // Permet de choisir si on change le mot de passe ou non
         document.addEventListener('DOMContentLoaded', function() {
-            var checkbox = document.querySelector('.change-password-checkbox');
-            var oldPasswordInput = document.querySelector('input[name="update_form[old_password]"]');
-            var newPasswordInput = document.querySelector('input[name="update_form[password]"]');
+            const checkbox = document.querySelector('.change-password-checkbox');
+            const oldPasswordInput = document.querySelector('input[name="update_form[old_password]"]');
+            const newPasswordInput = document.querySelector('input[name="update_form[password]"]');
 
             checkbox.addEventListener('change', function() {
                 oldPasswordInput.disabled = !this.checked;
@@ -144,7 +144,7 @@
             });
         });
 
-        // Afficher l'image avant la soumission du formulaire
+        // Affiche l'image avant la soumission du formulaire
         document.addEventListener('DOMContentLoaded', function() {
             const imageInput = document.querySelector('input[name="update_form[image]"]');
             const imagePreview = document.querySelector('.user-change-photo img');

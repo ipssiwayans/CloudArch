@@ -8,6 +8,7 @@ use App\Form\UpdateFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,10 +22,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class AccessController extends AbstractController
 {
     private $security;
+    private $filesystem;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security, Filesystem $filesystem)
     {
         $this->security = $security;
+        $this->filesystem = $filesystem;
     }
 
     #[Route('/registration', name: 'app_registration')]
@@ -102,26 +105,22 @@ class AccessController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
 
-            // this condition is needed because the 'image' field is not required
-            // so the image file must be processed only when a file is uploaded
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
+                // Sert à nettoyer le nom du fichier pour éviter tout problème de sécurité
                 $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
 
-                // Move the file to the directory where images are stored
+                // Sert à déplacer le fichier dans le répertoire où les images sont stockées
                 try {
                     $imageFile->move(
                         $this->getParameter('images_directory'),
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+
                 }
 
-                // updates the 'imageFilename' property to store the image file name
-                // instead of its contents
                 $user->setImageFilename($newFilename);
             }
 
@@ -172,6 +171,12 @@ class AccessController extends AbstractController
         }
 
         $user = $this->getUser();
+
+        // Supprime l'image de l'utilisateur si elle existe
+        $imagePath = $this->getParameter('images_directory') . '/' . $user->getImageFilename();
+        if ($this->filesystem->exists($imagePath)) {
+            $this->filesystem->remove($imagePath);
+        }
 
         $entityManager->remove($user);
         $entityManager->flush();
