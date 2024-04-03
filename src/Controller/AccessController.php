@@ -118,7 +118,6 @@ class AccessController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-
                 }
 
                 $user->setImageFilename($newFilename);
