@@ -106,6 +106,12 @@ class AccessController extends AbstractController
             $imageFile = $form->get('image')->getData();
 
             if ($imageFile) {
+                // Supprime l'ancienne image de l'utilisateur si elle existe
+                $oldImagePath = $this->getParameter('images_directory') . '/' . $user->getImageFilename();
+                if ($this->filesystem->exists($oldImagePath)) {
+                    $this->filesystem->remove($oldImagePath);
+                }
+
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // Sert à nettoyer le nom du fichier pour éviter tout problème de sécurité
                 $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
