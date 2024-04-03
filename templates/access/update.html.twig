@@ -47,8 +47,6 @@
                                 <ion-icon name="image-sharp"></ion-icon>Changer d'image
                                 {{ form_widget(updateForm.image, {'attr': {'style': 'display: none;'}}) }}
                             </label>
-                            {{ form_label(updateForm.image) }}
-                            {{ form_errors(updateForm.image) }}
                         </div>
                         <div class="card-body form-body row g-3">
 
@@ -128,7 +126,6 @@
                     </div>
                 </div>
             </div>
-            <!--end row-->
 {% endblock %}
 
 {% block scriptsPerso %}
@@ -149,13 +146,13 @@
 
         // Afficher l'image avant la soumission du formulaire
         document.addEventListener('DOMContentLoaded', function() {
-            var imageInput = document.querySelector('input[name="update_form[image]"]');
-            var imagePreview = document.querySelector('.user-change-photo img');
+            const imageInput = document.querySelector('input[name="update_form[image]"]');
+            const imagePreview = document.querySelector('.user-change-photo img');
 
             imageInput.addEventListener('change', function() {
-                var file = this.files[0];
+                let file = this.files[0];
                 if (file) {
-                    var reader = new FileReader();
+                    let reader = new FileReader();
                     reader.onload = function(e) {
                         imagePreview.src = e.target.result;
                     }
