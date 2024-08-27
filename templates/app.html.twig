@@ -1,115 +1,115 @@
 <!doctype html>
 <html lang="fr" class="light-theme">
-    {% block head %}
-        <head>
-            <!-- Required meta tags here -->
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block head %}
+    <head>
+        <!-- Required meta tags here -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-            <!-- loader-->
-            <link href="{{ asset('assets/css/pace.min.css') }}" rel="stylesheet" />
-            <script src="{{ asset('assets/js/pace.min.js') }}"></script>
+        <!-- loader-->
+        <link href="{{ asset('assets/css/pace.min.css') }}" rel="stylesheet"/>
+        <script src="{{ asset('assets/js/pace.min.js') }}"></script>
 
-            <!--plugins-->
-            <link href="{{ asset('assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet" />
-            <link href="{{ asset('assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet" />
-            <link href="{{ asset('assets/plugins/metismenu/css/metisMenu.min.css') }}" rel="stylesheet" />
-            <link href="{{ asset('assets/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
+        <!--plugins-->
+        <link href="{{ asset('assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('assets/plugins/metismenu/css/metisMenu.min.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('assets/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet"/>
 
-            <!-- CSS Files -->
-            <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
-            <link href="{{ asset('assets/css/bootstrap-extended.css') }}" rel="stylesheet">
-            <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
-            <link href="{{ asset('assets/css/icons.css') }}" rel="stylesheet">
-            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+        <!-- CSS Files -->
+        <link href="{{ asset('assets/css/bootstrap.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/css/bootstrap-extended.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/css/icons.css') }}" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
-            <!--Theme Styles-->
-            <link href="{{ asset('assets/css/dark-theme.css') }}" rel="stylesheet" />
-            <link href="{{ asset('assets/css/semi-dark.css') }}" rel="stylesheet" />
-            <link href="{{ asset('assets/css/header-colors.css') }}" rel="stylesheet" />
+        <!--Theme Styles-->
+        <link href="{{ asset('assets/css/dark-theme.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('assets/css/semi-dark.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('assets/css/header-colors.css') }}" rel="stylesheet"/>
 
-            <title>{% block title %}Accueil | Cloud Arch{% endblock %}</title>
-        </head>
+        <title>{% block title %}Accueil | Cloud Arch{% endblock %}</title>
+    </head>
+{% endblock %}
+
+<body>
+<!--start wrapper-->
+<div class="wrapper">
+
+    {% block sidebar %}
+        {% include 'partials/sidebar.html.twig' %}
     {% endblock %}
 
-    <body>
-        <!--start wrapper-->
-        <div class="wrapper">
+    {% block header %}
+        {% include 'partials/header.html.twig' %}
+    {% endblock %}
 
-            {% block sidebar %}
-                {% include 'partials/sidebar.html.twig' %}
-            {% endblock %}
-
-            {% block header %}
-               {% include 'partials/header.html.twig' %}
-            {% endblock %}
-
-            {% block contentWrapper %}
-                <!-- start page content wrapper-->
-                <div class="page-content-wrapper">
-                    <!-- start page content-->
-                    <div class="page-content">
-                    {% for type,messages in app.flashes %}
-                        {% for msg in messages %}
-                            <p class="alert alert-{{ type }}"> {{ msg }} </p>
-                        {% endfor %}
+    {% block contentWrapper %}
+        <!-- start page content wrapper-->
+        <div class="page-content-wrapper">
+            <!-- start page content-->
+            <div class="page-content">
+                {% for type,messages in app.flashes %}
+                    {% for msg in messages %}
+                        <p class="alert alert-{{ type }}"> {{ msg }} </p>
                     {% endfor %}
+                {% endfor %}
 
-                    {% block content %}{% endblock %}
-                    </div>
-                    <!-- end page content-->
-                </div>
-                    <!-- end page content wrapper-->
-            {% endblock %}
-
-            {% block backToTop %}
-                <!--Start Back To Top Button-->
-                <a href="javaScript:;" class="back-to-top">
-                    <ion-icon name="arrow-up-outline"></ion-icon>
-                </a>
-                <!--End Back To Top Button-->
-            {% endblock %}
-
-            {% block switcher %}{% endblock %}
-
-            {% block overlay %}
-                <div class="overlay"></div>
-            {% endblock %}
+                {% block content %}{% endblock %}
+            </div>
+            <!-- end page content-->
         </div>
-        <!--end wrapper-->
+        <!-- end page content wrapper-->
+    {% endblock %}
 
-        {% block scripts %}
-            <!-- JS Files-->
-            <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
-            <script src="{{ asset('assets/plugins/simplebar/js/simplebar.min.js') }}"></script>
-            <script src="{{ asset('assets/plugins/metismenu/js/metisMenu.min.js') }}"></script>
-            <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-            <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-            <!--plugins-->
-            <script src="{{ asset('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
-            <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
-            <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
-            <script src="{{ asset('assets/js/table-datatable.js') }}"></script>
+    {% block backToTop %}
+        <!--Start Back To Top Button-->
+        <a href="javaScript:" class="back-to-top">
+            <ion-icon name="arrow-up-outline"></ion-icon>
+        </a>
+        <!--End Back To Top Button-->
+    {% endblock %}
 
-            <!-- Easy Pie Chart JS -->
-            <script src="{{ asset('assets/plugins/jquery.easy-pie-chart/jquery.easypiechart.min.js') }}"></script>
-            <script src="{{ asset('assets/plugins/jquery.easy-pie-chart/easy-pie-chart.init.js') }}"></script>
+    {% block switcher %}{% endblock %}
 
-            <!-- KNOB JS -->
-            <!--[if IE]>
+    {% block overlay %}
+        <div class="overlay"></div>
+    {% endblock %}
+</div>
+<!--end wrapper-->
+
+{% block scripts %}
+    <!-- JS Files-->
+    <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/simplebar/js/simplebar.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/metismenu/js/metisMenu.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <!--plugins-->
+    <script src="{{ asset('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/table-datatable.js') }}"></script>
+
+    <!-- Easy Pie Chart JS -->
+    <script src="{{ asset('assets/plugins/jquery.easy-pie-chart/jquery.easypiechart.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/jquery.easy-pie-chart/easy-pie-chart.init.js') }}"></script>
+
+    <!-- KNOB JS -->
+    <!--[if IE]>
             <script type="text/javascript" src="{{ asset('assets/plugins/jquery-knob/excanvas.js') }}"></script>
             <![endif]-->
-            <script src="{{ asset('assets/plugins/jquery-knob/excanvas.js') }}"></script>
-            <script src="{{ asset('assets/plugins/jquery-knob/jquery.knob.js') }}"></script>
+    <script src="{{ asset('assets/plugins/jquery-knob/excanvas.js') }}"></script>
+    <script src="{{ asset('assets/plugins/jquery-knob/jquery.knob.js') }}"></script>
 
-            <script>
-                $(function () {
-                    $(".knob").knob();
-                });
-            </script>
+    <script>
+        $(function () {
+            $(".knob").knob();
+        });
+    </script>
 
-            <script src="{{  asset('assets/js/main.js') }}"></script>
-        {% endblock %}
-        {% block scriptsPerso %}{% endblock %}
-    </body>
+    <script src="{{ asset('assets/js/main.js') }}"></script>
+{% endblock %}
+{% block scriptsPerso %}{% endblock %}
+</body>
 </html>

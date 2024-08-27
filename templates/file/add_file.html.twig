@@ -1,0 +1,35 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}
+    Ajouter un fichier | Cloud Arch
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title text-center">Ajouter un fichier</h4>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+                        <div class="form-group">
+                            {{ form_label(form.file) }}
+                            {{ form_widget(form.file, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.file) }}
+                        </div>
+                        {{ form_widget(form._token) }}
+                        <button type="submit" class="btn btn-primary mt-2">Ajouter</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
