@@ -1,0 +1,18 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}Modifier le nom du fichier | Cloud Arch{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Modifier le nom du fichier</h1>
+
+        {{ form_start(form) }}
+        <div class="form-group">
+            {{ form_label(form.name) }}
+            {{ form_widget(form.name) }}
+            {{ form_errors(form.name) }}
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
