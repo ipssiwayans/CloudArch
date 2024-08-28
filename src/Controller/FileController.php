@@ -6,6 +6,7 @@ use App\Entity\File;
 use App\Form\AddFileType;
 use App\Form\EditFileNameType;
 use App\Manager\FileManager;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -28,9 +29,9 @@ class FileController extends AbstractController
 
     #[Route('/upload', name: 'app_add_file')]
     public function add_file(
-        Request $request,
+        Request                $request,
         EntityManagerInterface $entityManager,
-        Security $security,
+        Security               $security,
     ): Response {
         $fileEntity = new File();
         $form = $this->createForm(AddFileType::class, $fileEntity);
@@ -43,10 +44,10 @@ class FileController extends AbstractController
                     $fileEntity->setName($file->getClientOriginalName());
                     $fileEntity->setSize($file->getSize());
                     $fileEntity->setFormat($file->getMimeType());
-                    $fileEntity->setCreation(new \DateTime('now'));
+                    $fileEntity->setCreation(new DateTime('now'));
 
                     $currentUser = $security->getUser();
-                    $fileEntity->setUserId($currentUser);
+                    $fileEntity->setUser($currentUser);
 
                     $destination = $this->getParameter('kernel.project_dir') . '/public/uploads';
                     $file->move($destination, $file->getClientOriginalName());
@@ -65,7 +66,7 @@ class FileController extends AbstractController
                     $errorMessage = $error->getMessage();
                     if ('This file is too large. The maximum size allowed is 5MB.' === $errorMessage) {
                         $this->addFlash('error', 'Le fichier est trop volumineux. Taille maximale autorisée : 5MB');
-                    } elseif (false !== strpos($errorMessage, 'The mime type of the file is invalid')) {
+                    } elseif (str_contains($errorMessage, 'The mime type of the file is invalid')) {
                         $this->addFlash('error', 'Type de fichier non valide. Veuillez télécharger un fichier au format autorisé.');
                     } elseif ('The uploaded file was too large. Please try to upload a smaller file.' === $errorMessage) {
                         $this->addFlash('error', 'Le fichier téléchargé est trop volumineux. Veuillez essayer un fichier plus petit.');
@@ -88,7 +89,7 @@ class FileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file->setLatestChanges(new \DateTime('now'));
+            $file->setLatestChanges(new DateTime('now'));
             $entityManager->flush();
 
             $this->addFlash('success', 'Nom du fichier modifié avec succès.');
