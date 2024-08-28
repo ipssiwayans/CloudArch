@@ -21,6 +21,6 @@ class FileManager
     {
         $currentUser = $this->security->getUser();
 
-        return $this->entityManager->getRepository(File::class)->findBy(['user_id' => $currentUser]);
+        return $this->entityManager->getRepository(File::class)->findBy(['user' => $currentUser]);
     }
 }
