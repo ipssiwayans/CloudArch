@@ -32,7 +32,8 @@ class FileController extends AbstractController
         Request                $request,
         EntityManagerInterface $entityManager,
         Security               $security,
-    ): Response {
+    ): Response
+    {
         $fileEntity = new File();
         $form = $this->createForm(AddFileType::class, $fileEntity);
         $form->handleRequest($request);
@@ -85,11 +86,23 @@ class FileController extends AbstractController
     #[Route('/file/edit/{id}', name: 'app_edit_file', methods: ['GET', 'POST'])]
     public function edit(Request $request, File $file, EntityManagerInterface $entityManager): Response
     {
+        $oldFileName = $file->getName();
+        $oldFileExtension = pathinfo($oldFileName, PATHINFO_EXTENSION);
         $form = $this->createForm(EditFileNameType::class, $file);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $newFileName = $file->getName();
+            $newFileName = $newFileName . '.' . $oldFileExtension;
+            $file->setName($newFileName);
             $file->setLatestChanges(new DateTime('now'));
+
+            if ($oldFileName !== $newFileName) {
+                $oldFilePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $oldFileName;
+                $newFilePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $newFileName;
+                rename($oldFilePath, $newFilePath);
+            }
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Nom du fichier modifié avec succès.');
