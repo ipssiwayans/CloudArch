@@ -2,10 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Invoice;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\UpdateFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Stripe\Checkout\Session;
+use Stripe\Exception\ApiErrorException;
+use Stripe\Stripe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -13,14 +17,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Intl\Countries;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AccessController extends AbstractController
 {
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security)
     {
@@ -30,35 +38,108 @@ class AccessController extends AbstractController
     #[Route('/registration', name: 'app_registration')]
     public function registration(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-        if ($this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_home');
-        }
-
-        $countries = Countries::getNames();
         $user = new User();
-
         $form = $this->createForm(RegistrationFormType::class, $user);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $form->get('password')->getData();
-            $hashedPassword = $passwordHasher->hashPassword($user, $password);
+            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
 
-            $user->setTotalStorage(20);
-            $user->setRegistrationDate(new \DateTime());
+            // Enregistrement temporaire
+            $request->getSession()->set('registration_data', $user);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('create_checkout_session');
         }
 
         return $this->render('access/registration.html.twig', [
-            'countries' => $countries,
             'registrationForm' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @throws ApiErrorException
+     */
+    #[Route('/create-checkout-session', name: 'create_checkout_session')]
+    public function createCheckoutSession(): Response
+    {
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+
+        // Création de la session de paiement Stripe
+        $session = Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => 'Abonnement 20 Go',
+                    ],
+                    'unit_amount' => 2000,
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => $this->generateUrl('app_payment_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'cancel_url' => $this->generateUrl('app_payment_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
+        ]);
+
+        return $this->redirect($session->url, 303);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    #[Route('/payment-success', name: 'app_payment_success')]
+    public function paymentSuccess(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    {
+        $user = $request->getSession()->get('registration_data');
+
+        $email = new Email();
+        $email
+            ->subject('Confirmation de votre abonnement')
+            ->to($user->getEmail())
+            ->from('contact@stomen.site')
+            ->text('Merci pour votre inscription . Vous avez souscrit à un abonnement de 20 Go et vous avez maintenant accès à votre espace');
+        $mailer->send($email);
+
+        if ($user instanceof User) {
+            $user
+                ->setTotalStorage(20)
+                ->setRegistrationDate(new \DateTime());
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $invoice = new Invoice();
+            $invoice
+                ->setUser($user)
+                ->setDate(new \DateTime())
+                ->setAmountHt(16.60)
+                ->setObject('Abonnement')
+                ->setQuantity(1)
+                ->setDescription('Abonnement initial de 20 Go')
+                ->setAmountTva(3.40)
+                ->setUnitPriceHt(16.60)
+                ->setTotalAmount(20.00);
+            $entityManager->persist($invoice);
+            $entityManager->flush();
+
+            $request->getSession()->remove('registration_data');
+
+            return $this->render('access/payment_success.html.twig');
+        }
+
+        $this->addFlash('error', 'Erreur lors de l\'enregistrement. Veuillez réessayer.');
+
+        return $this->redirectToRoute('app_registration');
+    }
+
+    #[Route('/payment-cancel', name: 'app_payment_cancel')]
+    public function paymentCancel(Request $request): Response
+    {
+        $request->getSession()->remove('registration_data');
+        $this->addFlash('error', 'Le paiement a échoué ou a été annulé. Veuillez réessayer.');
+
+        return $this->redirectToRoute('app_registration');
     }
 
     #[Route(path: '/reset', name: 'app_reset_password')]

@@ -38,6 +38,18 @@
             "./.php-cs-fixer.dist.php"
         ]
     },
+    "odolbeau/phone-number-bundle": {
+        "version": "4.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "8aaba28c06547e50377dd9dce4104b9e384731a5"
+        },
+        "files": [
+            "./config/packages/misd_phone_number.yaml"
+        ]
+    },
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {
@@ -66,6 +78,15 @@
             "./config/packages/asset_mapper.yaml",
             "./importmap.php"
         ]
+    },
+    "symfony/brevo-mailer": {
+        "version": "7.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.4",
+            "ref": "7c1038ceb733175f610a913a885a7c8b552b703a"
+        }
     },
     "symfony/console": {
         "version": "7.0",
