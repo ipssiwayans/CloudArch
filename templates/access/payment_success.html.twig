@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement Réussi{% endblock %}
+
+{% block body %}
+    <div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
+        <div class="text-center">
+            <h1 class="display-4">Paiement Réussi</h1>
+            <p class="lead">Merci pour votre paiement. Vous allez être redirigé vers la page de connexion dans <span
+                        id="counter" class="font-weight-bold">5</span> secondes...</p>
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+    </div>
+    <script>
+        let counter = "5";
+        const interval = setInterval(() => {
+            counter = (parseInt(counter) - 1).toString();
+            document.getElementById('counter').textContent = counter;
+            if (counter === "0") {
+                clearInterval(interval);
+                window.location.href = "{{ path('app_login') }}";
+            }
+        }, 1000);
+    </script>
+{% endblock %}

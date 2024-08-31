@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -58,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $total_storage = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?DateTimeInterface $registration_date = null;
+    private ?\DateTimeInterface $registration_date = null;
 
     #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'user')]
     private Collection $invoices;
@@ -66,10 +65,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'user')]
     private Collection $files;
 
+    #[ORM\Column]
+    private ?string $phone = null;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
         $this->files = new ArrayCollection();
+        $this->registration_date = new \DateTime();
     }
 
     public function getId(): ?int
@@ -212,12 +215,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRegistrationDate(): ?DateTimeInterface
+    public function getRegistrationDate(): ?\DateTimeInterface
     {
         return $this->registration_date;
     }
 
-    public function setRegistrationDate(DateTimeInterface $registration_date): static
+    public function setRegistrationDate(\DateTimeInterface $registration_date): static
     {
         $this->registration_date = $registration_date;
 
@@ -231,7 +234,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     /**
@@ -261,7 +264,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
 
     /**
      * @return Collection<int, Invoice>
@@ -319,6 +321,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $file->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
 
         return $this;
     }
