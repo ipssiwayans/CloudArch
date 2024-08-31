@@ -6,12 +6,15 @@ use App\Entity\Invoice;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\UpdateFormType;
+use App\Manager\FileManager;
+use App\Service\BreadcrumbService;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Checkout\Session;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Stripe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,10 +32,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class AccessController extends AbstractController
 {
     private Security $security;
+    private Filesystem $filesystem;
+    private $breadcrumbService;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security, Filesystem $filesystem, BreadcrumbService $breadcrumbService)
     {
         $this->security = $security;
+        $this->filesystem = $filesystem;
+        $this->breadcrumbService = $breadcrumbService;
     }
 
     #[Route('/registration', name: 'app_registration')]
@@ -154,20 +161,33 @@ class AccessController extends AbstractController
     }
 
     #[Route('/profile', name: 'app_profile')]
-    public function profile(Request $request, EntityManagerInterface $entityManager): Response
+    public function profile(Request $request, EntityManagerInterface $entityManager, SessionInterface $session, FileManager $fileManager): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
+
         $user = $this->getUser();
+
+        // dd($session->get('breadcrumbs'));
+        $totalFiles = $fileManager->getTotalFilesByUser($user);
+        $storageUsed = $fileManager->getStorageUsedByUser($user);
+        $storageUsed = $storageUsed / (1024 * 1024 * 1024);
+        $totalStorage = $user->getTotalStorage();
+
+        $storagePercentage = ($storageUsed / $totalStorage) * 100;
 
         return $this->render('access/profile.html.twig', [
             'user' => $user,
+            'totalFiles' => $totalFiles,
+            'storageUsed' => $storageUsed,
+            'storagePercentage' => $storagePercentage,
+            'breadcrumbs' => $session->get('breadcrumbs', []),
         ]);
     }
 
     #[Route('/update', name: 'app_update')]
-    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator): Response
+    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, SessionInterface $session): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
@@ -193,16 +213,15 @@ class AccessController extends AbstractController
 
                 // Move the file to the directory where images are stored
                 try {
-                    $imageFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
+                    $this->filesystem->copy(
+                        $imageFile->getPathname(),
+                        $this->getParameter('images_directory') . '/' . $newFilename,
+                        true
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    // Gérer l'exception si nécessaire
                 }
 
-                // updates the 'imageFilename' property to store the image file name
-                // instead of its contents
                 $user->setImageFilename($newFilename);
             }
 
@@ -242,6 +261,7 @@ class AccessController extends AbstractController
             'countries' => $countries,
             'updateForm' => $form->createView(),
             'user' => $user,
+            'breadcrumbs' => $session->get('breadcrumbs', []),
         ]);
     }
 
@@ -253,6 +273,12 @@ class AccessController extends AbstractController
         }
 
         $user = $this->getUser();
+
+        // Supprime l'image de l'utilisateur si elle existe
+        $imagePath = $this->getParameter('images_directory') . '/' . $user->getImageFilename();
+        if ($this->filesystem->exists($imagePath)) {
+            $this->filesystem->remove($imagePath);
+        }
 
         $entityManager->remove($user);
         $entityManager->flush();

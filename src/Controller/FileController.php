@@ -6,34 +6,34 @@ use App\Entity\File;
 use App\Form\AddFileType;
 use App\Form\EditFileNameType;
 use App\Manager\FileManager;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/file')]
 class FileController extends AbstractController
 {
     #[Route('/', name: 'app_file')]
-    public function index(FileManager $fileManager): Response
+    public function index(FileManager $fileManager, SessionInterface $session): Response
     {
         $files = $fileManager->getUserFiles();
 
         return $this->render('file/index.html.twig', [
             'files' => $files,
+            'breadcrumbs' => $session->get('breadcrumbs', []),
         ]);
     }
 
     #[Route('/upload', name: 'app_add_file')]
     public function add_file(
-        Request                $request,
+        Request $request,
         EntityManagerInterface $entityManager,
-        Security               $security,
-    ): Response
-    {
+        Security $security,
+    ): Response {
         $fileEntity = new File();
         $form = $this->createForm(AddFileType::class, $fileEntity);
         $form->handleRequest($request);
@@ -45,7 +45,7 @@ class FileController extends AbstractController
                     $fileEntity->setName($file->getClientOriginalName());
                     $fileEntity->setSize($file->getSize());
                     $fileEntity->setFormat($file->getMimeType());
-                    $fileEntity->setCreation(new DateTime('now'));
+                    $fileEntity->setCreation(new \DateTime('now'));
 
                     $currentUser = $security->getUser();
                     $fileEntity->setUser($currentUser);
@@ -95,7 +95,7 @@ class FileController extends AbstractController
             $newFileName = $file->getName();
             $newFileName = $newFileName . '.' . $oldFileExtension;
             $file->setName($newFileName);
-            $file->setLatestChanges(new DateTime('now'));
+            $file->setLatestChanges(new \DateTime('now'));
 
             if ($oldFileName !== $newFileName) {
                 $oldFilePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $oldFileName;
