@@ -13,7 +13,17 @@
                             <ion-icon name="home-outline"></ion-icon>
                         </a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Fichiers</li>
+                    {% for route in breadcrumbs %}
+                        {% if loop.last %}
+                            <li class="breadcrumb-item active" aria-current="page">
+                                {{ breadcrumbService.getPageTitle(route) }}
+                            </li>
+                        {% else %}
+                            <li class="breadcrumb-item">
+                                <a href="{{ path(route) }}">{{ breadcrumbService.getPageTitle(route) }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
                 </ol>
             </nav>
         </div>

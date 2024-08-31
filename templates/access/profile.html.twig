@@ -3,48 +3,44 @@
 {% block title %}Profil | Cloud Arch{% endblock %}
 
 {% block content %}
-    <!--start breadcrumb-->
+    <!-- start breadcrumb -->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Pages</div>
-        <div class="ps-3">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 p-0 align-items-center">
-                    <li class="breadcrumb-item"><a href="{{ path('app_home') }}"><ion-icon name="home-outline"></ion-icon></a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">Profil</li>
-                </ol>
-            </nav>
-        </div>
+        {% include 'partials/_breadcrumb.html.twig' %}
         <div class="ms-auto">
             <div class="btn-group">
                 <a href="{{ path('app_update') }}" class="btn btn-outline-primary">Modifier</a>
             </div>
         </div>
     </div>
-    <!--end breadcrumb-->
+    <!-- end breadcrumb -->
+
 
     <div class="row">
         <div class="col-12 col-lg-8 col-xl-9">
             <div class="card overflow-hidden radius-10">
                 <div class="profile-cover bg-dark position-relative mb-4">
                     <div class="user-profile-avatar shadow position-absolute top-50 start-0 translate-middle-x">
-                        <img src="assets/images/avatars/06.png" alt="...">
+                        {% if user.imageFilename %}
+                            <img style="object-fit: cover;" src="{{ asset('uploads/images/' ~ user.imageFilename) }}" alt="User image">
+                        {% else %}
+                            <img style="object-fit: cover;" src="{{ asset('assets/images/avatars/062.png') }}" alt="Default image">
+                        {% endif %}
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="mt-5 d-flex align-items-start justify-content-between">
                         <div class="">
                             <h3 class="mb-2">{{ user.firstname }} {{ user.lastname }}</h3>
-                            <p class="mb-1">Engineer at BB Agency Industry</p>
-                            <p>New York, United States</p>
+                            <p class="mb-1">{{ user.postalCode }}, {{ user.city }}</p>
+                            <p>Stockage total : {{ user.totalStorage }} Go</p>
                             <div class="">
-                                <span class="badge rounded-pill bg-primary">UX Research</span>
-                                <span class="badge rounded-pill bg-primary">CX Strategy</span>
-                                <span class="badge rounded-pill bg-primary">Project Management</span>
+                                <span class="badge rounded-pill bg-primary">Mes documents</span>
+                                <span class="badge rounded-pill bg-primary">Mes factures</span>
+                                <span class="badge rounded-pill bg-primary">Plus d'espaces</span>
                             </div>
                         </div>
                         <div class="">
-                            <a href="javascript:;" class="btn btn-primary"><ion-icon name="send-sharp"></ion-icon>Send Message</a>
+                            <a href="javascript:;" class="btn btn-primary"><ion-icon name="send-sharp"></ion-icon>Contacter nous</a>
                         </div>
                     </div>
                 </div>
@@ -60,46 +56,52 @@
         </div>
         <div class="col-12 col-lg-4 col-xl-3">
             <div class="card radius-10">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="widget-icon-2 bg-gradient-info text-white">
-                            <ion-icon name="document-text-sharp"></ion-icon>
+                <a href="{{ path('app_file') }}">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="widget-icon-2 bg-gradient-info text-white">
+                                <ion-icon name="document-text-sharp"></ion-icon>
+                            </div>
                         </div>
+                        <h5 class="my-3 text-black">Documents</h5>
+                        <div class="progress mt-1" style="height: 5px;">
+                            <div class="progress-bar bg-gradient-info" role="progressbar" style="width: 65%"></div>
+                        </div>
+                        <p class="mb-0 mt-2">5 Fichiers<span class="float-end">20 Go</span></p>
                     </div>
-                    <h5 class="my-3">Documents</h5>
-                    <div class="progress mt-1" style="height: 5px;">
-                        <div class="progress-bar bg-gradient-info" role="progressbar" style="width: 65%"></div>
-                    </div>
-                    <p class="mb-0 mt-2">5 Fichiers<span class="float-end">20 Go</span></p>
-                </div>
+                </a>
             </div>
 
             <div class="card radius-10">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="">
-                            <h5 class="mb-1">Factures</h5>
-                            <h4 class="mb-0 text-orange">2</h4>
-                        </div>
-                        <div class="ms-auto widget-icon bg-light-orange text-orange">
-                            <ion-icon name="newspaper-sharp"></ion-icon>
+                <a href="{{ path('app_complete') }}">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="">
+                                <h5 class="mb-1 text-black">Factures</h5>
+                                <h4 class="mb-0 text-orange">2</h4>
+                            </div>
+                            <div class="ms-auto widget-icon bg-light-orange text-orange">
+                                <ion-icon name="newspaper-sharp"></ion-icon>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <div class="card radius-10">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="">
-                            <h5 class="mb-1">Acheter plus d'espaces</h5>
-                            <a href="{{ path('app_prices') }}" class="mb-0 text-success">Voir les prix</a>
-                        </div>
-                        <div class="ms-auto widget-icon bg-light-success text-success fs-2">
-                            <ion-icon name="wallet-sharp"></ion-icon>
+                <a href="{{ path('app_prices') }}">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="">
+                                <h5 class="mb-1 text-black">Acheter plus d'espaces</h5>
+                                <a href="{{ path('app_prices') }}" class="mb-0 text-success">Voir les prix</a>
+                            </div>
+                            <div class="ms-auto widget-icon bg-light-success text-success fs-2">
+                                <ion-icon name="wallet-sharp"></ion-icon>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
 
         </div>
