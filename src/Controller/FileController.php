@@ -88,20 +88,6 @@ class FileController extends AbstractController
                     return $this->redirectToRoute('app_file');
                 }
                 $this->addFlash('error', 'Veuillez sélectionner un fichier');
-            } else {
-                $errors = $form->getErrors(true);
-                foreach ($errors as $error) {
-                    $errorMessage = $error->getMessage();
-                    if ('This file is too large. The maximum size allowed is 5MB.' === $errorMessage) {
-                        $this->addFlash('error', 'Le fichier est trop volumineux. Taille maximale autorisée : 5MB');
-                    } elseif (str_contains($errorMessage, 'The mime type of the file is invalid')) {
-                        $this->addFlash('error', 'Type de fichier non valide. Veuillez télécharger un fichier au format autorisé.');
-                    } elseif ('The uploaded file was too large. Please try to upload a smaller file.' === $errorMessage) {
-                        $this->addFlash('error', 'Le fichier téléchargé est trop volumineux. Veuillez essayer un fichier plus petit.');
-                    } else {
-                        $this->addFlash('error', $errorMessage);
-                    }
-                }
             }
         }
 
@@ -164,6 +150,19 @@ class FileController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Fichier supprimé avec succès.');
+
+        return $this->redirectToRoute('app_file');
+    }
+
+    #[Route('/file/download/{id}', name: 'app_download_file', methods: ['GET'])]
+    public function download(File $file): Response
+    {
+        $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $file->getName();
+        if (file_exists($filePath)) {
+            return $this->file($filePath, $file->getName());
+        }
+
+        $this->addFlash('error', 'Fichier introuvable.');
 
         return $this->redirectToRoute('app_file');
     }
