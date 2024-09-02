@@ -21,9 +21,11 @@
                 <div class="profile-cover bg-dark position-relative mb-4">
                     <div class="user-profile-avatar shadow position-absolute top-50 start-0 translate-middle-x">
                         {% if user.imageFilename %}
-                            <img style="object-fit: cover;" src="{{ asset('uploads/images/' ~ user.imageFilename) }}" alt="User image">
+                            <img style="object-fit: cover;" src="{{ asset('uploads/images/' ~ user.imageFilename) }}"
+                                 alt="User image">
                         {% else %}
-                            <img style="object-fit: cover;" src="{{ asset('assets/images/avatars/062.png') }}" alt="Default image">
+                            <img style="object-fit: cover;" src="{{ asset('assets/images/avatars/062.png') }}"
+                                 alt="Default image">
                         {% endif %}
                     </div>
                 </div>
@@ -40,7 +42,9 @@
                             </div>
                         </div>
                         <div class="">
-                            <a href="javascript:;" class="btn btn-primary"><ion-icon name="send-sharp"></ion-icon>Contacter nous</a>
+                            <a href="javascript:" class="btn btn-primary">
+                                <ion-icon name="send-sharp"></ion-icon>
+                                Contacter nous</a>
                         </div>
                     </div>
                 </div>
@@ -48,9 +52,17 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="mb-2">About Me</h4>
-                    <p class="">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters.</p>
-                    <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.</p>
-                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters</p>
+                    <p class="">It is a long established fact that a reader will be distracted by the readable content
+                        of a page when looking at its layout. The point of using Lorem Ipsum is that it has a
+                        more-or-less normal distribution of letters.</p>
+                    <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of
+                        classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a
+                        Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin
+                        words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in
+                        classical literature, discovered the undoubtable source.</p>
+                    <p>It is a long established fact that a reader will be distracted by the readable content of a page
+                        when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal
+                        distribution of letters</p>
                 </div>
             </div>
         </div>
@@ -63,11 +75,13 @@
                                 <ion-icon name="document-text-sharp"></ion-icon>
                             </div>
                         </div>
-                        <h5 class="my-3 text-black">Documents</h5>
+                        <h5 class="my-3 text-black">Documents </h5>
                         <div class="progress mt-1" style="height: 5px;">
-                            <div class="progress-bar bg-gradient-info" role="progressbar" style="width: 65%"></div>
+                            <div class="progress-bar bg-gradient-info" role="progressbar"
+                                 style="width: {{ storagePercentage }}%">
+                            </div>
                         </div>
-                        <p class="mb-0 mt-2">5 Fichiers<span class="float-end">20 Go</span></p>
+                        <p class="mb-0 mt-2">{{ totalFiles }} {{ totalFiles == 1 ? 'Fichier' : 'Fichiers' }}<span class="float-end">{{ user.totalStorage }} Go</span></p>
                     </div>
                 </a>
             </div>
@@ -89,19 +103,17 @@
             </div>
 
             <div class="card radius-10">
-                <a href="{{ path('app_prices') }}">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="">
-                                <h5 class="mb-1 text-black">Acheter plus d'espaces</h5>
-                                <a href="{{ path('app_prices') }}" class="mb-0 text-success">Voir les prix</a>
-                            </div>
-                            <div class="ms-auto widget-icon bg-light-success text-success fs-2">
-                                <ion-icon name="wallet-sharp"></ion-icon>
-                            </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="">
+                            <h5 class="mb-1">Acheter plus d'espaces</h5>
+                            <a href="{{ path('app_prices') }}" class="mb-0 text-success">Voir les prix</a>
+                        </div>
+                        <div class="ms-auto widget-icon bg-light-success text-success fs-2">
+                            <ion-icon name="wallet-sharp"></ion-icon>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
 
         </div>

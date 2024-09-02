@@ -6,6 +6,7 @@ use App\Entity\File;
 use App\Form\AddFileType;
 use App\Form\EditFileNameType;
 use App\Manager\FileManager;
+use App\Service\BreadcrumbService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -17,14 +18,31 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/file')]
 class FileController extends AbstractController
 {
+    private Security $security;
+    private BreadcrumbService $breadcrumbService;
+
+    public function __construct(Security $security, BreadcrumbService $breadcrumbService)
+    {
+        $this->security = $security;
+        $this->breadcrumbService = $breadcrumbService;
+    }
+
     #[Route('/', name: 'app_file')]
     public function index(FileManager $fileManager, SessionInterface $session): Response
     {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $this->breadcrumbService->setSession($session);
+
+        $this->breadcrumbService->addBreadcrumb('app_file');
+
         $files = $fileManager->getUserFiles();
 
         return $this->render('file/index.html.twig', [
             'files' => $files,
-            'breadcrumbs' => $session->get('breadcrumbs', []),
+            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 
@@ -33,7 +51,16 @@ class FileController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         Security $security,
+        SessionInterface $session
     ): Response {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $this->breadcrumbService->setSession($session);
+
+        $this->breadcrumbService->addBreadcrumb('app_add_file');
+
         $fileEntity = new File();
         $form = $this->createForm(AddFileType::class, $fileEntity);
         $form->handleRequest($request);
@@ -80,12 +107,21 @@ class FileController extends AbstractController
 
         return $this->render('file/add_file.html.twig', [
             'form' => $form->createView(),
+            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 
     #[Route('/file/edit/{id}', name: 'app_edit_file', methods: ['GET', 'POST'])]
-    public function edit(Request $request, File $file, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, File $file, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $this->breadcrumbService->setSession($session);
+
+        $this->breadcrumbService->addBreadcrumb('app_edit_file');
+
         $oldFileName = $file->getName();
         $oldFileExtension = pathinfo($oldFileName, PATHINFO_EXTENSION);
         $form = $this->createForm(EditFileNameType::class, $file);
@@ -113,6 +149,7 @@ class FileController extends AbstractController
         return $this->render('file/edit_file.html.twig', [
             'file' => $file,
             'form' => $form->createView(),
+            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 

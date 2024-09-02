@@ -3,37 +3,17 @@
 {% block title %}Fichiers | Cloud Arch{% endblock %}
 
 {% block content %}
-    <!--start breadcrumb-->
+
+    <!-- start breadcrumb -->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Pages</div>
-        <div class="ps-3">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 p-0 align-items-center">
-                    <li class="breadcrumb-item"><a href="{{ path('app_home') }}">
-                            <ion-icon name="home-outline"></ion-icon>
-                        </a>
-                    </li>
-                    {% for route in breadcrumbs %}
-                        {% if loop.last %}
-                            <li class="breadcrumb-item active" aria-current="page">
-                                {{ breadcrumbService.getPageTitle(route) }}
-                            </li>
-                        {% else %}
-                            <li class="breadcrumb-item">
-                                <a href="{{ path(route) }}">{{ breadcrumbService.getPageTitle(route) }}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ol>
-            </nav>
-        </div>
+        {% include 'partials/_breadcrumb.html.twig' %}
         <div class="ms-auto">
             <div class="btn-group">
                 <a href="{{ path('app_add_file') }}" class="btn btn-outline-primary">Ajouter un fichier</a>
             </div>
         </div>
     </div>
-    <!--end breadcrumb-->
+    <!-- end breadcrumb -->
 
     <h6 class="mb-0 text-uppercase">Liste des fichiers</h6>
     <hr/>

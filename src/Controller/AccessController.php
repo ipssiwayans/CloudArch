@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\File;
 use App\Entity\Invoice;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\UpdateFormType;
+use App\Manager\FileManager;
 use App\Service\BreadcrumbService;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Checkout\Session;
@@ -32,7 +34,7 @@ class AccessController extends AbstractController
 {
     private Security $security;
     private Filesystem $filesystem;
-    private $breadcrumbService;
+    private BreadcrumbService $breadcrumbService;
 
     public function __construct(Security $security, Filesystem $filesystem, BreadcrumbService $breadcrumbService)
     {
@@ -160,28 +162,43 @@ class AccessController extends AbstractController
     }
 
     #[Route('/profile', name: 'app_profile')]
-    public function profile(Request $request, EntityManagerInterface $entityManager, SessionInterface $session): Response
+    public function profile(Request $request, EntityManagerInterface $entityManager, SessionInterface $session, FileManager $fileManager): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
 
+        $this->breadcrumbService->setSession($session);
+
+        $this->breadcrumbService->addBreadcrumb('app_profile');
+
         $user = $this->getUser();
 
-        // dd($session->get('breadcrumbs'));
+        $totalFiles = $fileManager->getTotalFilesByUser($user);
+        $storageUsed = $fileManager->getStorageUsedByUser($user);
+        $storageUsed = $storageUsed / (1024 * 1024 * 1024);
+        $totalStorage = $user->getTotalStorage();
+
+        $storagePercentage = ($storageUsed / $totalStorage) * 100;
 
         return $this->render('access/profile.html.twig', [
             'user' => $user,
+            'totalFiles' => $totalFiles,
+            'storageUsed' => $storageUsed,
+            'storagePercentage' => $storagePercentage,
             'breadcrumbs' => $session->get('breadcrumbs', []),
         ]);
     }
 
     #[Route('/update', name: 'app_update')]
-    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, SessionInterface $session): Response
+    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, BreadcrumbService $breadcrumbService, SessionInterface $session): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
+        $this->breadcrumbService->setSession($session);
+
+        $this->breadcrumbService->addBreadcrumb('app_update');
 
         $user = $this->getUser();
         $countries = Countries::getNames();
@@ -197,11 +214,10 @@ class AccessController extends AbstractController
             // so the image file must be processed only when a file is uploaded
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
+                // Pour éviter les problèmes de sécurité, on utilise un nom de fichier aléatoire
                 $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
 
-                // Move the file to the directory where images are stored
                 try {
                     $this->filesystem->copy(
                         $imageFile->getPathname(),
@@ -209,7 +225,6 @@ class AccessController extends AbstractController
                         true
                     );
                 } catch (FileException $e) {
-                    // Gérer l'exception si nécessaire
                 }
 
                 $user->setImageFilename($newFilename);
@@ -234,7 +249,6 @@ class AccessController extends AbstractController
 
                         $this->addFlash('success', 'Vos informations ont bien été mise à jour !');
                     } else {
-                        // On ajoute un message d'erreur si le mot de passe actuel est incorrect
                         $this->addFlash('danger', "L'ancien mot de passe est incorrect.");
                     }
                 }
@@ -251,12 +265,15 @@ class AccessController extends AbstractController
             'countries' => $countries,
             'updateForm' => $form->createView(),
             'user' => $user,
-            'breadcrumbs' => $session->get('breadcrumbs', []),
+            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     #[Route('/delete', name: 'app_delete')]
-    public function delete(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, SessionInterface $session): Response
+    public function delete(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, SessionInterface $session, MailerInterface $mailer): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
@@ -264,7 +281,18 @@ class AccessController extends AbstractController
 
         $user = $this->getUser();
 
-        // Supprime l'image de l'utilisateur si elle existe
+        foreach ($user->getFiles() as $file) {
+            $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $file->getName();
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+            $entityManager->remove($file);
+        }
+
+        foreach ($user->getInvoices() as $invoice) {
+            $entityManager->remove($invoice);
+        }
+
         $imagePath = $this->getParameter('images_directory') . '/' . $user->getImageFilename();
         if ($this->filesystem->exists($imagePath)) {
             $this->filesystem->remove($imagePath);
@@ -275,6 +303,14 @@ class AccessController extends AbstractController
 
         $tokenStorage->setToken(null);
         $session->invalidate();
+
+        $email = new Email();
+        $email
+            ->subject('Confirmation de la suppression de votre compte.')
+            ->to($user->getEmail())
+            ->from('contact@stomen.site')
+            ->text('Votre compte a bien été supprimé. Nous espérons vous revoir bientôt !');
+        $mailer->send($email);
 
         $this->addFlash('danger', 'Votre compte a bien été supprimé !');
 
