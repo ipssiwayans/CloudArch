@@ -6,21 +6,27 @@
     <div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
         <div class="text-center">
             <h1 class="display-4">Paiement Réussi</h1>
-            <p class="lead">Merci pour votre paiement. Vous allez être redirigé vers la page de connexion dans <span
-                        id="counter" class="font-weight-bold">5</span> secondes...</p>
+            <p class="lead">Merci pour votre paiement. Vous allez être redirigé vers la page de
+                {% if storage is defined and storage is not null %}
+                    votre profil
+                {% else %}
+                    connexion
+                {% endif %}
+                dans <span id="counter" class="font-weight-bold">3</span> secondes...
+            </p>
             <div class="spinner-border text-primary" role="status">
                 <span class="sr-only"></span>
             </div>
         </div>
     </div>
     <script>
-        let counter = "5";
+        let counter = "3";
         const interval = setInterval(() => {
             counter = (parseInt(counter) - 1).toString();
             document.getElementById('counter').textContent = counter;
             if (counter === "0") {
                 clearInterval(interval);
-                window.location.href = "{{ path('app_login') }}";
+                window.location.href = "{% if storage is defined and storage is not null %}{{ path('app_profile') }}{% else %}{{ path('app_login') }}{% endif %}";
             }
         }, 1000);
     </script>

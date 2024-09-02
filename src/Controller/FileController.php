@@ -97,7 +97,7 @@ class FileController extends AbstractController
         ]);
     }
 
-    #[Route('/file/edit/{id}', name: 'app_edit_file', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'app_edit_file', methods: ['GET', 'POST'])]
     public function edit(Request $request, File $file, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
@@ -139,7 +139,7 @@ class FileController extends AbstractController
         ]);
     }
 
-    #[Route('/file/delete/{id}', name: 'app_delete_file', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_delete_file', methods: ['POST'])]
     public function delete(Request $request, File $file, EntityManagerInterface $entityManager): Response
     {
         $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $file->getName();
@@ -154,7 +154,7 @@ class FileController extends AbstractController
         return $this->redirectToRoute('app_file');
     }
 
-    #[Route('/file/download/{id}', name: 'app_download_file', methods: ['GET'])]
+    #[Route('/download/{id}', name: 'app_download_file', methods: ['GET'])]
     public function download(File $file): Response
     {
         $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $file->getName();
