@@ -23,4 +23,20 @@ class FileManager
 
         return $this->entityManager->getRepository(File::class)->findBy(['user' => $currentUser]);
     }
+
+    public function getTotalFilesByUser($user): int
+    {
+        return count($this->entityManager->getRepository(File::class)->findBy(['user' => $user]));
+    }
+
+    public function getStorageUsedByUser($user): int
+    {
+        $files = $this->entityManager->getRepository(File::class)->findBy(['user' => $user]);
+        $totalSize = 0;
+        foreach ($files as $file) {
+            $totalSize += $file->getSize();
+        }
+
+        return $totalSize;
+    }
 }

@@ -6,13 +6,6 @@
         <div class="top-navbar-right ms-auto">
 
             <ul class="navbar-nav align-items-center">
-                <li class="nav-item mobile-search-button">
-                    <a class="nav-link" href="javascript:;">
-                        <div class="">
-                            <ion-icon name="search-sharp"></ion-icon>
-                        </div>
-                    </a>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link dark-mode-icon" href="javascript:;">
                         <div class="mode-icon">
@@ -20,10 +13,14 @@
                         </div>
                     </a>
                 </li>
-                <li class="nav-item dropdown dropdown-user-setting">
+                <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_profile') }}">
                         <div class="user-setting">
-                            <img src="assets/images/avatars/06.png" class="user-img" alt="">
+                            {% if app.user.imageFilename %}
+                                <img class="user-img" style="object-fit: cover;" src="{{ asset('uploads/images/' ~ app.user.imageFilename) }}" alt="User image">
+                            {% else %}
+                                <img class="user-img" style="object-fit: cover;" src="{{ asset('assets/images/avatars/062.png') }}" alt="Default image">
+                            {% endif %}
                         </div>
                     </a>
                 </li>

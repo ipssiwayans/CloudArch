@@ -6,34 +6,61 @@ use App\Entity\File;
 use App\Form\AddFileType;
 use App\Form\EditFileNameType;
 use App\Manager\FileManager;
-use DateTime;
+use App\Service\BreadcrumbService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/file')]
 class FileController extends AbstractController
 {
-    #[Route('/', name: 'app_file')]
-    public function index(FileManager $fileManager): Response
+    private Security $security;
+    private BreadcrumbService $breadcrumbService;
+
+    public function __construct(Security $security, BreadcrumbService $breadcrumbService)
     {
+        $this->security = $security;
+        $this->breadcrumbService = $breadcrumbService;
+    }
+
+    #[Route('/', name: 'app_file')]
+    public function index(FileManager $fileManager, SessionInterface $session): Response
+    {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $this->breadcrumbService->setSession($session);
+
+        $this->breadcrumbService->addBreadcrumb('app_file');
+
         $files = $fileManager->getUserFiles();
 
         return $this->render('file/index.html.twig', [
             'files' => $files,
+            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 
     #[Route('/upload', name: 'app_add_file')]
     public function add_file(
-        Request                $request,
+        Request $request,
         EntityManagerInterface $entityManager,
-        Security               $security,
-    ): Response
-    {
+        Security $security,
+        SessionInterface $session
+    ): Response {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $this->breadcrumbService->setSession($session);
+
+        $this->breadcrumbService->addBreadcrumb('app_add_file');
+
         $fileEntity = new File();
         $form = $this->createForm(AddFileType::class, $fileEntity);
         $form->handleRequest($request);
@@ -45,7 +72,7 @@ class FileController extends AbstractController
                     $fileEntity->setName($file->getClientOriginalName());
                     $fileEntity->setSize($file->getSize());
                     $fileEntity->setFormat($file->getMimeType());
-                    $fileEntity->setCreation(new DateTime('now'));
+                    $fileEntity->setCreation(new \DateTime('now'));
 
                     $currentUser = $security->getUser();
                     $fileEntity->setUser($currentUser);
@@ -80,12 +107,21 @@ class FileController extends AbstractController
 
         return $this->render('file/add_file.html.twig', [
             'form' => $form->createView(),
+            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 
     #[Route('/file/edit/{id}', name: 'app_edit_file', methods: ['GET', 'POST'])]
-    public function edit(Request $request, File $file, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, File $file, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $this->breadcrumbService->setSession($session);
+
+        $this->breadcrumbService->addBreadcrumb('app_edit_file');
+
         $oldFileName = $file->getName();
         $oldFileExtension = pathinfo($oldFileName, PATHINFO_EXTENSION);
         $form = $this->createForm(EditFileNameType::class, $file);
@@ -95,7 +131,7 @@ class FileController extends AbstractController
             $newFileName = $file->getName();
             $newFileName = $newFileName . '.' . $oldFileExtension;
             $file->setName($newFileName);
-            $file->setLatestChanges(new DateTime('now'));
+            $file->setLatestChanges(new \DateTime('now'));
 
             if ($oldFileName !== $newFileName) {
                 $oldFilePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $oldFileName;
@@ -113,6 +149,7 @@ class FileController extends AbstractController
         return $this->render('file/edit_file.html.twig', [
             'file' => $file,
             'form' => $form->createView(),
+            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 
