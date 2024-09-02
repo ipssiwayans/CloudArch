@@ -39,7 +39,6 @@ class BreadcrumbService
         $existingIndex = array_search($route, $breadcrumbs, true);
 
         if (false !== $existingIndex) {
-            // Si la route existe déjà, on coupe les breadcrumbs jusqu'à cette route
             $breadcrumbs = array_slice($breadcrumbs, 0, $existingIndex + 1);
         } else {
             $breadcrumbs[] = $route;

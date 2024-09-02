@@ -54,7 +54,6 @@ class AccessController extends AbstractController
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
 
-            // Enregistrement temporaire
             $request->getSession()->set('registration_data', $user);
 
             return $this->redirectToRoute('create_checkout_session');
@@ -73,7 +72,6 @@ class AccessController extends AbstractController
     {
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
-        // Création de la session de paiement Stripe
         $session = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
@@ -210,11 +208,8 @@ class AccessController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
 
-            // this condition is needed because the 'image' field is not required
-            // so the image file must be processed only when a file is uploaded
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // Pour éviter les problèmes de sécurité, on utilise un nom de fichier aléatoire
                 $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
 
@@ -230,17 +225,12 @@ class AccessController extends AbstractController
                 $user->setImageFilename($newFilename);
             }
 
-            // On vérifie si l'utilisateur souhaite changer de mot de passe
             if ($form->get('change_password')->getData()) {
                 $oldPassword = $form->get('old_password')->getData();
                 $newPassword = $form->get('password')->getData();
-
-                // On change le mot de passe si les champs sont remplis
                 if (!empty($oldPassword) && !empty($newPassword)) {
-                    // On valide les données du formulaire avec le groupe de validation 'password_change'
                     $errors = $validator->validate($form->getData(), null, ['password_change']);
 
-                    // On vérifie si le mot de passe actuel est correct
                     if ($passwordHasher->isPasswordValid($user, $oldPassword)) {
                         $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
                         $user->setPassword($hashedPassword);
