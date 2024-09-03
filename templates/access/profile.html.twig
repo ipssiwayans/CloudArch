@@ -81,7 +81,9 @@
                                  style="width: {{ storagePercentage }}%">
                             </div>
                         </div>
-                        <p class="mb-0 mt-2">{{ totalFiles }} {{ totalFiles == 1 ? 'Fichier' : 'Fichiers' }}<span class="float-end">{{ user.totalStorage }} Go</span></p>
+                        <p class="mb-0 mt-2">{{ totalFiles }} {{ totalFiles == 1 ? 'Fichier' : 'Fichiers' }}
+                            <span class="float-end">{{ user.totalStorage }} Go</span>
+                        </p>
                     </div>
                 </a>
             </div>
@@ -92,7 +94,7 @@
                         <div class="d-flex align-items-center">
                             <div class="">
                                 <h5 class="mb-1 text-black">Factures</h5>
-                                <h4 class="mb-0 text-orange">2</h4>
+                                <h4 class="mb-0 text-orange">{{ invoices }}</h4>
                             </div>
                             <div class="ms-auto widget-icon bg-light-orange text-orange">
                                 <ion-icon name="newspaper-sharp"></ion-icon>
@@ -106,8 +108,10 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="">
-                            <h5 class="mb-1">Acheter plus d'espaces</h5>
-                            <a href="{{ path('app_prices') }}" class="mb-0 text-success">Voir les prix</a>
+                            <h5 class="mb-1">Boostez votre stockage</h5>
+                            <a href="{{ path('create_checkout_session_storage') }}" class="mb-0 text-success">Ajoutez 20
+                                Go maintenant
+                                !</a>
                         </div>
                         <div class="ms-auto widget-icon bg-light-success text-success fs-2">
                             <ion-icon name="wallet-sharp"></ion-icon>

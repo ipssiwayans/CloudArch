@@ -2,17 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\File;
 use App\Entity\Invoice;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\UpdateFormType;
 use App\Manager\FileManager;
 use App\Service\BreadcrumbService;
+use App\Service\PaymentService;
 use Doctrine\ORM\EntityManagerInterface;
-use Stripe\Checkout\Session;
 use Stripe\Exception\ApiErrorException;
-use Stripe\Stripe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Filesystem;
@@ -26,7 +24,6 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -35,12 +32,18 @@ class AccessController extends AbstractController
     private Security $security;
     private Filesystem $filesystem;
     private BreadcrumbService $breadcrumbService;
+    private PaymentService $paymentService;
 
-    public function __construct(Security $security, Filesystem $filesystem, BreadcrumbService $breadcrumbService)
-    {
+    public function __construct(
+        Security $security,
+        Filesystem $filesystem,
+        BreadcrumbService $breadcrumbService,
+        PaymentService $paymentService
+    ) {
         $this->security = $security;
         $this->filesystem = $filesystem;
         $this->breadcrumbService = $breadcrumbService;
+        $this->paymentService = $paymentService;
     }
 
     #[Route('/registration', name: 'app_registration')]
@@ -70,24 +73,12 @@ class AccessController extends AbstractController
     #[Route('/create-checkout-session', name: 'create_checkout_session')]
     public function createCheckoutSession(): Response
     {
-        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
-
-        $session = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'eur',
-                    'product_data' => [
-                        'name' => 'Abonnement 20 Go',
-                    ],
-                    'unit_amount' => 2000,
-                ],
-                'quantity' => 1,
-            ]],
-            'mode' => 'payment',
-            'success_url' => $this->generateUrl('app_payment_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            'cancel_url' => $this->generateUrl('app_payment_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
-        ]);
+        $session = $this->paymentService->createCheckoutSession(
+            'Abonnement initial de 20 Go',
+            2000,
+            'app_payment_success',
+            'app_payment_cancel'
+        );
 
         return $this->redirect($session->url, 303);
     }
@@ -160,14 +151,13 @@ class AccessController extends AbstractController
     }
 
     #[Route('/profile', name: 'app_profile')]
-    public function profile(Request $request, EntityManagerInterface $entityManager, SessionInterface $session, FileManager $fileManager): Response
+    public function profile(SessionInterface $session, FileManager $fileManager): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
 
         $this->breadcrumbService->setSession($session);
-
         $this->breadcrumbService->addBreadcrumb('app_profile');
 
         $user = $this->getUser();
@@ -176,14 +166,16 @@ class AccessController extends AbstractController
         $storageUsed = $fileManager->getStorageUsedByUser($user);
         $storageUsed = $storageUsed / (1024 * 1024 * 1024);
         $totalStorage = $user->getTotalStorage();
-
         $storagePercentage = ($storageUsed / $totalStorage) * 100;
+
+        $invoices = count($user->getInvoices());
 
         return $this->render('access/profile.html.twig', [
             'user' => $user,
             'totalFiles' => $totalFiles,
             'storageUsed' => $storageUsed,
             'storagePercentage' => $storagePercentage,
+            'invoices' => $invoices,
             'breadcrumbs' => $session->get('breadcrumbs', []),
         ]);
     }
