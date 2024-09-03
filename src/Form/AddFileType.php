@@ -21,7 +21,7 @@ class AddFileType extends AbstractType
 
                 'constraints' => [
                     new FileConstraint([
-                        'maxSize' => '5M',
+                        'maxSize' => '50M',
                         'mimeTypes' => [
                             'application/pdf',
                             'application/x-pdf',

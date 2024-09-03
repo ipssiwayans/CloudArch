@@ -42,6 +42,8 @@
                             <td>{{ file.creation|date('d/m/Y à H\\hi', 'Europe/Paris') }}</td>
                             <td>{{ file.latestChanges ? file.latestChanges|date('d/m/Y à H\\hi', 'Europe/Paris') : file.creation|date('d/m/Y à H\\hi', 'Europe/Paris') }}</td>
                             <td>
+                                <a href="{{ path('app_download_file', {'id': file.id}) }}"
+                                   class="btn btn-sm btn-success">Télécharger</a>
                                 <a href="{{ path('app_edit_file', {'id': file.id}) }}"
                                    class="btn btn-sm btn-primary">Modifier</a>
                                 <form action="{{ path('app_delete_file', {'id': file.id}) }}" method="post"
