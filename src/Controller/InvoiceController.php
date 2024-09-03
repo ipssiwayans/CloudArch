@@ -39,8 +39,6 @@ class InvoiceController extends AbstractController
         $invoice = $invoiceManager->getInvoiceById($id);
         $user = $this->getUser();
 
-        dump($invoice);
-        dump($user);
         $this->breadcrumbService->setSession($session);
         $this->breadcrumbService->addBreadcrumb('app_invoice_show');
         $this->breadcrumbService->addBreadcrumb('Facture n°' . $id);
