@@ -33,20 +33,6 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/prices', name: 'app_prices')]
-    public function prices(SessionInterface $session): Response
-    {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-        $user = $this->getUser();
-
-        return $this->render('prices/prices.html.twig', [
-            'user' => $user,
-            'breadcrumbs' => $session->get('breadcrumbs', []),
-        ]);
-    }
-
     #[Route('/complete', name: 'app_complete')]
     public function complete(): Response
     {
