@@ -1,6 +1,6 @@
 {
     "doctrine/doctrine-bundle": {
-        "version": "2.11",
+        "version": "2.13",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -27,7 +27,7 @@
         ]
     },
     "friendsofphp/php-cs-fixer": {
-        "version": "3.51",
+        "version": "3.64",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -45,10 +45,7 @@
             "branch": "main",
             "version": "3.0",
             "ref": "8aaba28c06547e50377dd9dce4104b9e384731a5"
-        },
-        "files": [
-            "./config/packages/misd_phone_number.yaml"
-        ]
+        }
     },
     "phpunit/phpunit": {
         "version": "9.6",
@@ -94,7 +91,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "5.3",
-            "ref": "da0c8be8157600ad34f10ff0c9cc91232522e047"
+            "ref": "1781ff40d8a17d87cf53f8d4cf0c8346ed2bb461"
         },
         "files": [
             "./bin/console"
@@ -156,7 +153,7 @@
         ]
     },
     "symfony/maker-bundle": {
-        "version": "1.55",
+        "version": "1.61",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -201,7 +198,7 @@
         ]
     },
     "symfony/phpunit-bridge": {
-        "version": "7.0",
+        "version": "7.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -242,7 +239,7 @@
         ]
     },
     "symfony/stimulus-bundle": {
-        "version": "2.16",
+        "version": "2.19",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -282,7 +279,7 @@
         ]
     },
     "symfony/ux-turbo": {
-        "version": "v2.16.0"
+        "version": "v2.19.3"
     },
     "symfony/validator": {
         "version": "7.0",
@@ -310,6 +307,6 @@
         ]
     },
     "twig/extra-bundle": {
-        "version": "v3.8.0"
+        "version": "v3.12.0"
     }
 }

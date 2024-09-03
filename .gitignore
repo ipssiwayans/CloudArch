@@ -32,3 +32,6 @@
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
 /public/uploads
+
+###> nodemodules ###
+/node_modules
