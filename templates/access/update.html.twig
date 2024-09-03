@@ -3,108 +3,101 @@
 {% block title %}Modification | Cloud Arch{% endblock %}
 
 {% block content %}
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card radius-10">
+                    {{ form_start(updateForm) }}
+                <div class="mb-4 d-flex flex-column gap-3 align-items-center justify-content-center">
+                    <div class="user-change-photo shadow">
+                        {% if user.imageFilename %}
+                            <img style="object-fit: cover;" src="{{ asset('uploads/images/' ~ user.imageFilename) }}" alt="User image">
+                        {% else %}
+                            <img style="object-fit: cover;" src="{{ asset('assets/images/avatars/062.png') }}" alt="Default image">
+                        {% endif %}
+                    </div>
+                    <label for="update_form_image" class="btn btn-outline-primary btn-sm radius-30 px-4">
+                        <ion-icon name="image-sharp"></ion-icon>Changer d'image
+                        {{ form_widget(updateForm.image, {'attr': {'style': 'display: none;'}}) }}
+                    </label>
+                </div>
+                <div class="card-body form-body row g-3">
 
-    <!-- start breadcrumb -->
-    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        {% include 'partials/_breadcrumb.html.twig' %}
-    </div>
-    <!-- end breadcrumb -->
-
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="card radius-10">
-                            {{ form_start(updateForm) }}
-                        <div class="mb-4 d-flex flex-column gap-3 align-items-center justify-content-center">
-                            <div class="user-change-photo shadow">
-                                {% if user.imageFilename %}
-                                    <img style="object-fit: cover;" src="{{ asset('uploads/images/' ~ user.imageFilename) }}" alt="User image">
-                                {% else %}
-                                    <img style="object-fit: cover;" src="{{ asset('assets/images/avatars/062.png') }}" alt="Default image">
-                                {% endif %}
-                            </div>
-                            <label for="update_form_image" class="btn btn-outline-primary btn-sm radius-30 px-4">
-                                <ion-icon name="image-sharp"></ion-icon>Changer d'image
-                                {{ form_widget(updateForm.image, {'attr': {'style': 'display: none;'}}) }}
-                            </label>
+                    <h5 class="mb-3 text-center">Modifier votre profil</h5>
+                    <h5 class="mb-0 mt-4">Informations personnelles</h5>
+                    <hr>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            {{ form_label(updateForm.firstname) }}
+                            {{ form_widget(updateForm.firstname) }}
+                            {{ form_errors(updateForm.firstname) }}
                         </div>
-                        <div class="card-body form-body row g-3">
-
-                            <h5 class="mb-3 text-center">Modifier votre profil</h5>
-                            <h5 class="mb-0 mt-4">Informations personnelles</h5>
-                            <hr>
-                            <div class="row g-3">
-                                <div class="col-6">
-                                    {{ form_label(updateForm.firstname) }}
-                                    {{ form_widget(updateForm.firstname) }}
-                                    {{ form_errors(updateForm.firstname) }}
-                                </div>
-                                <div class="col-6">
-                                    {{ form_label(updateForm.old_password) }}
-                                    {{ form_widget(updateForm.old_password) }}
-                                    {{ form_errors(updateForm.old_password) }}
-                                </div>
-                                <div class="col-6">
-                                    {{ form_label(updateForm.lastname) }}
-                                    {{ form_widget(updateForm.lastname) }}
-                                    {{ form_errors(updateForm.lastname) }}
-                                </div>
-                                <div class="col-6">
-                                    {{ form_label(updateForm.password) }}
-                                    {{ form_widget(updateForm.password) }}
-                                    {{ form_errors(updateForm.password) }}
-                                </div>
-                                <div class="col-6">
-                                    {{ form_label(updateForm.email) }}
-                                    {{ form_widget(updateForm.email) }}
-                                    {{ form_errors(updateForm.email) }}
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                {{ form_label(updateForm.change_password) }}
-                                {{ form_widget(updateForm.change_password) }}
-                                {{ form_errors(updateForm.change_password) }}
-                            </div>
-
-                            <h5 class="mb-0 mt-4">Informations de contacte</h5>
-                            <hr>
-                            <div class="row g-3">
-                                <div class="col-4">
-                                    {{ form_label(updateForm.street_number) }}
-                                    {{ form_widget(updateForm.street_number) }}
-                                </div>
-                                <div class="col-8">
-                                    {{ form_label(updateForm.street_address) }}
-                                    {{ form_widget(updateForm.street_address) }}
-                                </div>
-                                <div class="mt-1">{{ form_errors(updateForm.street_number) }}</div>
-                                <div class="mt-1">{{ form_errors(updateForm.street_address) }}</div>
-                                <div class="col-4">
-                                    {{ form_label(updateForm.postal_code) }}
-                                    {{ form_widget(updateForm.postal_code) }}
-                                    {{ form_errors(updateForm.postal_code) }}
-                                </div>
-                                <div class="col-4">
-                                    {{ form_label(updateForm.city) }}
-                                    {{ form_widget(updateForm.city) }}
-                                    {{ form_errors(updateForm.city) }}
-                                </div>
-                                <div class="col-4">
-                                    {{ form_label(updateForm.country) }}
-                                    {{ form_widget(updateForm.country) }}
-                                    {{ form_errors(updateForm.country) }}
-                                </div>
-                            </div>
-                            <div class="row g-3">
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary px-4">Modifier</button>
-                                    <a href="{{ path('app_delete', {'id': user.id}) }}" class="btn btn-danger px-4" onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')">Supprimer le compte</a>
-                                </div>
-                            </div>
-                            {{ form_end(updateForm) }}
+                        <div class="col-6">
+                            {{ form_label(updateForm.old_password) }}
+                            {{ form_widget(updateForm.old_password) }}
+                            {{ form_errors(updateForm.old_password) }}
+                        </div>
+                        <div class="col-6">
+                            {{ form_label(updateForm.lastname) }}
+                            {{ form_widget(updateForm.lastname) }}
+                            {{ form_errors(updateForm.lastname) }}
+                        </div>
+                        <div class="col-6">
+                            {{ form_label(updateForm.password) }}
+                            {{ form_widget(updateForm.password) }}
+                            {{ form_errors(updateForm.password) }}
+                        </div>
+                        <div class="col-6">
+                            {{ form_label(updateForm.email) }}
+                            {{ form_widget(updateForm.email) }}
+                            {{ form_errors(updateForm.email) }}
                         </div>
                     </div>
+                    <div class="col-6">
+                        {{ form_label(updateForm.change_password) }}
+                        {{ form_widget(updateForm.change_password) }}
+                        {{ form_errors(updateForm.change_password) }}
+                    </div>
+
+                    <h5 class="mb-0 mt-4">Informations de contacte</h5>
+                    <hr>
+                    <div class="row g-3">
+                        <div class="col-4">
+                            {{ form_label(updateForm.street_number) }}
+                            {{ form_widget(updateForm.street_number) }}
+                        </div>
+                        <div class="col-8">
+                            {{ form_label(updateForm.street_address) }}
+                            {{ form_widget(updateForm.street_address) }}
+                        </div>
+                        <div class="mt-1">{{ form_errors(updateForm.street_number) }}</div>
+                        <div class="mt-1">{{ form_errors(updateForm.street_address) }}</div>
+                        <div class="col-4">
+                            {{ form_label(updateForm.postal_code) }}
+                            {{ form_widget(updateForm.postal_code) }}
+                            {{ form_errors(updateForm.postal_code) }}
+                        </div>
+                        <div class="col-4">
+                            {{ form_label(updateForm.city) }}
+                            {{ form_widget(updateForm.city) }}
+                            {{ form_errors(updateForm.city) }}
+                        </div>
+                        <div class="col-4">
+                            {{ form_label(updateForm.country) }}
+                            {{ form_widget(updateForm.country) }}
+                            {{ form_errors(updateForm.country) }}
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="text-end mt-3">
+                            <button type="submit" class="btn btn-primary px-4">Modifier</button>
+                            <a href="{{ path('app_delete', {'id': user.id}) }}" class="btn btn-danger px-4" onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')">Supprimer le compte</a>
+                        </div>
+                    </div>
+                    {{ form_end(updateForm) }}
                 </div>
             </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scriptsPerso %}

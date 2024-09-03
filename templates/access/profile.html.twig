@@ -3,17 +3,6 @@
 {% block title %}Profil | Cloud Arch{% endblock %}
 
 {% block content %}
-    <!-- start breadcrumb -->
-    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        {% include 'partials/_breadcrumb.html.twig' %}
-        <div class="ms-auto">
-            <div class="btn-group">
-                <a href="{{ path('app_update', {'id': user.id}) }}" class="btn btn-outline-primary">Modifier</a>
-            </div>
-        </div>
-    </div>
-    <!-- end breadcrumb -->
-
     <div class="row">
         <div class="col-12 col-lg-8 col-xl-9">
             <div class="card overflow-hidden radius-10">
@@ -42,9 +31,7 @@
                             </div>
                         </div>
                         <div class="">
-                            <a href="javascript:" class="btn btn-primary">
-                                <ion-icon name="send-sharp"></ion-icon>
-                                Contacter nous</a>
+                            <a href="{{ path('app_update', {'id': user.id}) }}" class="btn btn-outline-primary">Modifier</a>
                         </div>
                     </div>
                 </div>

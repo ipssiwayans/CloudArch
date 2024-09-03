@@ -6,7 +6,6 @@ use App\Entity\File;
 use App\Form\AddFileType;
 use App\Form\EditFileNameType;
 use App\Manager\FileManager;
-use App\Service\BreadcrumbService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -19,12 +18,10 @@ use Symfony\Component\Routing\Attribute\Route;
 class FileController extends AbstractController
 {
     private Security $security;
-    private BreadcrumbService $breadcrumbService;
 
-    public function __construct(Security $security, BreadcrumbService $breadcrumbService)
+    public function __construct(Security $security)
     {
         $this->security = $security;
-        $this->breadcrumbService = $breadcrumbService;
     }
 
     #[Route('/', name: 'app_file')]
@@ -36,16 +33,11 @@ class FileController extends AbstractController
 
         $user = $this->security->getUser();
 
-        $this->breadcrumbService->setSession($session);
-
-        $this->breadcrumbService->addBreadcrumb('app_file');
-
         $files = $fileManager->getUserFiles();
 
         return $this->render('file/index.html.twig', [
             'files' => $files,
             'user' => $user,
-            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 
@@ -61,10 +53,6 @@ class FileController extends AbstractController
         }
 
         $user = $this->security->getUser();
-
-        $this->breadcrumbService->setSession($session);
-
-        $this->breadcrumbService->addBreadcrumb('app_add_file');
 
         $fileEntity = new File();
         $form = $this->createForm(AddFileType::class, $fileEntity);
@@ -99,7 +87,6 @@ class FileController extends AbstractController
         return $this->render('file/add_file.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
-            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 
@@ -111,10 +98,6 @@ class FileController extends AbstractController
         }
 
         $user = $this->security->getUser();
-
-        $this->breadcrumbService->setSession($session);
-
-        $this->breadcrumbService->addBreadcrumb('app_edit_file');
 
         $oldFileName = $file->getName();
         $oldFileExtension = pathinfo($oldFileName, PATHINFO_EXTENSION);
@@ -144,7 +127,6 @@ class FileController extends AbstractController
             'file' => $file,
             'user' => $user,
             'form' => $form->createView(),
-            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 

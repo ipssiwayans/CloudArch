@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Service\BreadcrumbService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,9 +11,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     private Security $security;
-    private BreadcrumbService $breadcrumbService;
 
-    public function __construct(Security $security, BreadcrumbService $breadcrumbService)
+    public function __construct(Security $security)
     {
         $this->security = $security;
     }
