@@ -1,0 +1,107 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}Admin | Cloud Arch{% endblock %}
+
+{% block content %}
+    <h1>Administration des Utilisateurs</h1>
+    <hr/>
+    <div class="row">
+        <div class="card radius-10 w-100">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="userData" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Stockage Utilisé</th>
+                                <th>Stockage Disponible</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in users %}
+                                <tr>
+                                    <td>{{ data.user.id }}</td>
+                                    <td>{{ data.user.firstname }} {{ data.user.lastname }}</td>
+                                    <td>{{ data.user.email }}</td>
+                                    <td>{{ data.usedStorage|format_size }}</td>
+                                    <td>{{ data.availableStorage|format_size }}</td>
+                                    <td>
+                                        <div class="d-flex justify-content-evenly">
+                                            <a href="{{ path('admin_user_files', {'id': data.user.id}) }}"><ion-icon name="eye-sharp" style="color: mediumslateblue"></ion-icon></a>
+                                            <a href="{{ path('app_update', {'id': data.user.id}) }}"><ion-icon name="pencil-sharp" style="color: darkorange"></ion-icon></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center">Aucun utilisateur trouvé</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section des statistiques -->
+            <h2>Statistiques des Fichiers</h2>
+            <ul>
+                <li>Nombre total de fichiers uploadés : {{ totalFiles }}</li>
+                <li>Nombre de fichiers uploadés aujourd’hui : {{ todayFiles }}</li>
+            </ul>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <h6 class="mb-0">Total de fichiers uploadé</h6>
+                </div>
+                <div class="chart-container3">
+                    <div class="piechart-legend">
+                        <h2 class="mb-1">{{ totalFiles }}</h2>
+                        <h6 class="mb-0">Total des fichiers</h6>
+                    </div>
+                    <canvas id="chart1"></canvas>
+                </div>
+            </div>
+
+            <!-- Section des Fichiers par client -->
+            <h3>Répartition du Nombre de Fichiers par Client</h3>
+            <hr/>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Nombre de Fichiers</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in filesPerUser %}
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.firstname }} {{ user.lastname }}</td>
+                                    <td>{{ user.fileCount }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center">Aucun utilisateur trouvé</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scriptsPerso %}
+    <script src="{{ asset('assets/js/index.js') }}"></script>
+    <script src="{{ asset('assets/plugins/chartjs/chart.min.js') }}"></script>
+{% endblock %}

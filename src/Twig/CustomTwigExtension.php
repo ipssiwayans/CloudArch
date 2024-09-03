@@ -14,6 +14,7 @@ class CustomTwigExtension extends AbstractExtension
             new TwigFilter('simple_format', [$this, 'simpleFormat']),
             new TwigFilter('type_file', [$this, 'typeFile']),
             new TwigFilter('name_file', [$this, 'nameFile']),
+            new TwigFilter('format_size', [$this, 'formatSize']),
         ];
     }
 
@@ -51,5 +52,20 @@ class CustomTwigExtension extends AbstractExtension
         $parts = explode('.', $name);
 
         return $parts[0];
+    }
+
+    public function formatSize(float $size): string
+    {
+        if ($size >= 1024 ** 3) {
+            return number_format($size / (1024 ** 3), 2) . ' Go';
+        }
+        if ($size >= 1024 ** 2) {
+            return number_format($size / (1024 ** 2), 2) . ' Mo';
+        }
+        if ($size >= 1024) {
+            return number_format($size / 1024, 2) . ' Ko';
+        }
+
+        return number_format($size, 2) . ' octets';
     }
 }

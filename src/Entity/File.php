@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\FileRepository;
-use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,10 +24,10 @@ class File
     private ?string $format = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $latestChanges = null;
+    private ?\DateTimeInterface $latestChanges = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?DateTimeInterface $creation = null;
+    private ?\DateTimeInterface $creation = null;
 
     #[ORM\ManyToOne(inversedBy: 'files')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
@@ -75,24 +74,24 @@ class File
         return $this;
     }
 
-    public function getLatestChanges(): ?DateTimeInterface
+    public function getLatestChanges(): ?\DateTimeInterface
     {
         return $this->latestChanges;
     }
 
-    public function setLatestChanges(?DateTimeInterface $latestChanges): static
+    public function setLatestChanges(?\DateTimeInterface $latestChanges): static
     {
         $this->latestChanges = $latestChanges;
 
         return $this;
     }
 
-    public function getCreation(): ?DateTimeInterface
+    public function getCreation(): ?\DateTimeInterface
     {
         return $this->creation;
     }
 
-    public function setCreation(DateTimeInterface $creation): static
+    public function setCreation(\DateTimeInterface $creation): static
     {
         $this->creation = $creation;
 
@@ -110,5 +109,4 @@ class File
 
         return $this;
     }
-
 }
