@@ -17,7 +17,6 @@ class HomeController extends AbstractController
     public function __construct(Security $security, BreadcrumbService $breadcrumbService)
     {
         $this->security = $security;
-        $this->breadcrumbService = $breadcrumbService;
     }
 
     #[Route('/', name: 'app_home')]
@@ -27,15 +26,10 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $this->breadcrumbService->setSession($session);
-
-        $this->breadcrumbService->addBreadcrumb('app_home');
-
         $user = $this->getUser();
 
         return $this->render('app.html.twig', [
             'user' => $user,
-            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 
@@ -64,5 +58,11 @@ class HomeController extends AbstractController
         return $this->render('prices/complete.html.twig', [
             'user' => $user,
         ]);
+    }
+
+    #[Route('/error', name: 'app_error')]
+    public function error(): Response
+    {
+        return $this->render('bundles/TwigBundle/Exception/error404.html.twig');
     }
 }

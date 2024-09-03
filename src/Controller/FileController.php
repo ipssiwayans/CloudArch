@@ -34,6 +34,8 @@ class FileController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+        $user = $this->security->getUser();
+
         $this->breadcrumbService->setSession($session);
 
         $this->breadcrumbService->addBreadcrumb('app_file');
@@ -42,6 +44,7 @@ class FileController extends AbstractController
 
         return $this->render('file/index.html.twig', [
             'files' => $files,
+            'user' => $user,
             'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
@@ -56,6 +59,8 @@ class FileController extends AbstractController
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
+
+        $user = $this->security->getUser();
 
         $this->breadcrumbService->setSession($session);
 
@@ -107,6 +112,7 @@ class FileController extends AbstractController
 
         return $this->render('file/add_file.html.twig', [
             'form' => $form->createView(),
+            'user' => $user,
             'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
@@ -117,6 +123,8 @@ class FileController extends AbstractController
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
+
+        $user = $this->security->getUser();
 
         $this->breadcrumbService->setSession($session);
 
@@ -148,6 +156,7 @@ class FileController extends AbstractController
 
         return $this->render('file/edit_file.html.twig', [
             'file' => $file,
+            'user' => $user,
             'form' => $form->createView(),
             'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);

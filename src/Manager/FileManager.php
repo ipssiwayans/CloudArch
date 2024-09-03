@@ -39,4 +39,9 @@ class FileManager
 
         return $totalSize;
     }
+
+    public function getTotalFiles(): int
+    {
+        return count($this->entityManager->getRepository(File::class)->findAll());
+    }
 }

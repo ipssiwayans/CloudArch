@@ -97,7 +97,7 @@
                             <div class="row g-3">
                                 <div class="text-end mt-3">
                                     <button type="submit" class="btn btn-primary px-4">Modifier</button>
-                                    <a href="{{ path('app_delete') }}" class="btn btn-danger px-4" onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')">Supprimer le compte</a>
+                                    <a href="{{ path('app_delete', {'id': user.id}) }}" class="btn btn-danger px-4" onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')">Supprimer le compte</a>
                                 </div>
                             </div>
                             {{ form_end(updateForm) }}

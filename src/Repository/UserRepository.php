@@ -21,6 +21,16 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    public function getFilesPerUser(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.id, u.firstname, u.lastname, count(f.id) as fileCount')
+            ->leftJoin('u.files', 'f')
+            ->groupBy('u.id')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */
