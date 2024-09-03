@@ -9,3 +9,8 @@
     margin: 0;
     text-align: center;
 }
+
+.page-item.active .page-link {
+    background-color: #923eb9 !important;
+    border-color: #923eb9 !important;
+}

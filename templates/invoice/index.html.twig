@@ -25,24 +25,16 @@
                         <tr>
                             <td>{{ invoice.object }}</td>
                             <td>{{ invoice.description }}</td>
-                            <td>{{ invoice.amountHt }}€</td>
-                            <td>{{ invoice.amountTva }}€</td>
-                            <td>{{ invoice.totalAmount }}€</td>
+                            <td>{{ invoice.amountHt|number_format(2, '.', ',') }}€</td>
+                            <td>{{ invoice.amountTva|number_format(2, '.', ',') }}€</td>
+                            <td>{{ invoice.totalAmount|number_format(2, '.', ',') }}€</td>
                             <td>{{ invoice.date|date('d/m/Y à H\\hi', 'Europe/Paris') }}</td>
                             <td>
-                                {#                                <a href="{{ path('app_download_file', {'id': invoice.id}) }}" #}
-                                {#                                   class="btn btn-sm btn-success">Télécharger</a> #}
+                                <a href="{{ path('app_invoice_download', {'id': invoice.id}) }}"
+                                   class="btn btn-sm btn-success">Télécharger</a>
                                 <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}"
                                    class="btn btn-sm btn-primary">Voir ma facture
                                 </a>
-                                <form action="{{ path('app_delete_file', {'id': invoice.id}) }}" method="post"
-                                      style="display:inline;">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ invoice.id) }}">
-                                    <button type="submit" class="btn btn-sm btn-danger"
-                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce fichier ?');">
-                                        Supprimer
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                     {% else %}

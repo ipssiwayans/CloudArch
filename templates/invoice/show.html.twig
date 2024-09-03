@@ -10,7 +10,7 @@
                     <h5 class="mb-0">Cloud Arch, Inc</h5>
                 </div>
                 <div class="col-12 col-lg-6 text-md-end">
-                    <a href="javascript:" class="btn btn-primary me-2">
+                    <a href="{{ path('app_invoice_download', {'id':invoice.id}) }}" class="btn btn-primary me-2">
                         <ion-icon name="file-tray-full-sharp"></ion-icon>
                         Exporter en PDF</a>
                     <a href="javascript:" onclick="window.print()" class="btn btn-secondary">
