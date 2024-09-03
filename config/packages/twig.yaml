@@ -1,7 +1,5 @@
 twig:
     file_name_pattern: '*.twig'
-    globals:
-        breadcrumbService: '@App\Service\BreadcrumbService'
 
 when@test:
     twig:

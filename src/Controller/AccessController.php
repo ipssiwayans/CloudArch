@@ -7,7 +7,6 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\UpdateFormType;
 use App\Manager\FileManager;
-use App\Service\BreadcrumbService;
 use App\Service\PaymentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Exception\ApiErrorException;
@@ -31,18 +30,15 @@ class AccessController extends AbstractController
 {
     private Security $security;
     private Filesystem $filesystem;
-    private BreadcrumbService $breadcrumbService;
     private PaymentService $paymentService;
 
     public function __construct(
         Security $security,
         Filesystem $filesystem,
-        BreadcrumbService $breadcrumbService,
         PaymentService $paymentService
     ) {
         $this->security = $security;
         $this->filesystem = $filesystem;
-        $this->breadcrumbService = $breadcrumbService;
         $this->paymentService = $paymentService;
     }
 
@@ -157,9 +153,6 @@ class AccessController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $this->breadcrumbService->setSession($session);
-        $this->breadcrumbService->addBreadcrumb('app_profile');
-
         $user = $this->getUser();
 
         $totalFiles = $fileManager->getTotalFilesByUser($user);
@@ -175,21 +168,16 @@ class AccessController extends AbstractController
             'storageUsed' => $storageUsed,
             'storagePercentage' => $storagePercentage,
             'invoices' => $invoices,
-            'breadcrumbs' => $session->get('breadcrumbs', []),
         ]);
     }
 
     #[Route('/update/{id}', name: 'app_update')]
-    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, BreadcrumbService $breadcrumbService, SessionInterface $session, int $id): Response
+    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, SessionInterface $session, int $id): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
         $loggedInUser = $this->getUser();
-
-        $this->breadcrumbService->setSession($session);
-
-        $this->breadcrumbService->addBreadcrumb('app_update');
 
         $user = $entityManager->getRepository(User::class)->find($id);
         $countries = Countries::getNames();
@@ -252,7 +240,6 @@ class AccessController extends AbstractController
             'countries' => $countries,
             'updateForm' => $form->createView(),
             'user' => $user,
-            'breadcrumbs' => $this->breadcrumbService->getBreadcrumbs(),
         ]);
     }
 
