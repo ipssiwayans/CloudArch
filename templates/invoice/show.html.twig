@@ -1,0 +1,134 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}Fichiers | Cloud Arch{% endblock %}
+
+{% block content %}
+
+    <!-- start breadcrumb -->
+    {#    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3"> #}
+    {#        {% include 'partials/_breadcrumb.html.twig' %} #}
+    {#    </div> #}
+    <!-- end breadcrumb -->
+
+    <div class="card radius-10">
+        <div class="card-header py-3">
+            <div class="row align-items-center g-3">
+                <div class="col-12 col-lg-6">
+                    <h5 class="mb-0">Cloud Arch, Inc</h5>
+                </div>
+                <div class="col-12 col-lg-6 text-md-end">
+                    <a href="javascript:" class="btn btn-primary me-2">
+                        <ion-icon name="file-tray-full-sharp"></ion-icon>
+                        Exporter en PDF</a>
+                    <a href="javascript:" onclick="window.print()" class="btn btn-secondary">
+                        <ion-icon name="print-sharp"></ion-icon>
+                        Imprimer</a>
+                </div>
+            </div>
+        </div>
+        {% block pdf_content %}
+            <div class="card-header py-2">
+                <div class="row row-cols-1 row-cols-lg-3">
+                    <div class="col">
+                        <div class="">
+                            <small>De</small>
+                            <address class="m-t-5 m-b-5">
+                                <strong class="text-inverse">Cloud Arch, Inc.</strong><br>
+                                2 rue Paris<br>
+                                Paris, 75000<br>
+                                FR<br>
+                                01 48 51 25 41<br>
+                            </address>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="">
+                            <small>A</small>
+                            <address class="m-t-5 m-b-5">
+                                <strong class="text-inverse">{{ user.lastname }} {{ user.firstname }}</strong><br>
+                                {{ user.streetNumber }} {{ user.streetAddress }}<br>
+                                {{ user.city }}, {{ user.postalCode }}<br>
+                                {{ user.country }}<br>
+                                {{ user.phone }}<br>
+                            </address>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="">
+                            <small>Facture du</small>
+                            <div class=""><b>{{ invoice.date|date('d/m/Y') }}</b></div>
+                            <small>Numero de facture</small>
+                            <div class="invoice-detail">
+                                #{{ invoice.id }}<br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-invoice">
+                        <thead>
+                        <tr>
+                            <th>DESCRIPTION</th>
+                            <th class="text-center" style="width: 10%;">PRIX HT</th>
+                            <th class="text-center" style="width: 10%;">TVA</th>
+                            <th class="text-right" style="width: 20%;">PRIX TTC</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <span class="text-inverse">{{ invoice.object }}</span><br>
+                                <small>{{ invoice.description }}</small>
+                            </td>
+                            <td class="text-center">€{{ invoice.amountHt|number_format(2, '.', ',') }}</td>
+                            <td class="text-center">€{{ invoice.amountTva|number_format(2, '.', ',') }}</td>
+                            <td class="text-right">€{{ invoice.totalAmount|number_format(2, '.', ',') }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row bg-light align-items-center m-0">
+                    <div class="col col-auto p-4">
+                        <p class="mb-0">SOUS TOTAL</p>
+                        <h4 class="mb-0">€{{ invoice.amountHt|number_format(2, '.', ',') }}</h4>
+                    </div>
+                    <div class="col col-auto p-4">
+                        <i class="bi bi-plus-lg text-muted"></i>
+                    </div>
+                    <div class="col col-auto me-auto p-4">
+                        <p class="mb-0">TVA (20%)</p>
+                        <h4 class="mb-0">€{{ invoice.amountTva|number_format(2, '.', ',') }}</h4>
+                    </div>
+                    <div class="col bg-primary col-auto p-4">
+                        <p class="mb-0 text-white">TOTAL</p>
+                        <h4 class="mb-0 text-white">€{{ invoice.totalAmount|number_format(2, '.', ',') }}</h4>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="my-3">
+                    * Veuillez libeller tous les chèques à l'ordre de <strong>Cloud Arch</strong><br>
+                    * Le paiement est dû dans les 30 jours<br>
+                    * Si vous avez des questions concernant cette facture, contactez notre support à
+                    support@cloudarch.com
+                    ou par téléphone au 01 48 51 25 41
+                </div>
+            </div>
+
+            <div class="card-footer py-3 bg-transparent">
+                <p class="text-center mb-2">
+                    MERCI POUR VOTRE ACHAT !
+                </p>
+                <p class="text-center d-flex align-items-center gap-3 justify-content-center mb-0">
+                    <span class=""><i class="bi bi-globe"></i> www.clourdarch.com</span>
+                    <span class=""><i class="bi bi-telephone-fill"></i> T:+33 1 48 51 25 41 </span>
+                    <span class=""><i class="bi bi-envelope-fill"></i> contact@cloudarch.com</span>
+                </p>
+            </div>
+        {% endblock %}
+    </div>
+
+{% endblock %}
