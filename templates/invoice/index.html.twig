@@ -1,0 +1,77 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}Profil | Cloud Arch{% endblock %}
+
+{% block content %}
+
+    <!-- start breadcrumb -->
+    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        {% include 'partials/_breadcrumb.html.twig' %}
+    </div>
+    <!-- end breadcrumb -->
+
+    <h6 class="mb-0 text-uppercase">Mes factures</h6>
+    <hr/>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Objet</th>
+                        <th>Description</th>
+                        <th>Montant HT</th>
+                        <th>TVA</th>
+                        <th>Total</th>
+                        <th>Date de facturation</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for invoice in invoices %}
+                        <tr>
+                            <td>{{ invoice.object }}</td>
+                            <td>{{ invoice.description }}</td>
+                            <td>{{ invoice.amountHt }}€</td>
+                            <td>{{ invoice.amountTva }}€</td>
+                            <td>{{ invoice.totalAmount }}€</td>
+                            <td>{{ invoice.date|date('d/m/Y à H\\hi', 'Europe/Paris') }}</td>
+                            <td>
+                                {#                                <a href="{{ path('app_download_file', {'id': invoice.id}) }}" #}
+                                {#                                   class="btn btn-sm btn-success">Télécharger</a> #}
+                                <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}"
+                                   class="btn btn-sm btn-primary">Voir ma facture
+                                </a>
+                                <form action="{{ path('app_delete_file', {'id': invoice.id}) }}" method="post"
+                                      style="display:inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ invoice.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce fichier ?');">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">Aucun fichier trouvé</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Objet</th>
+                        <th>Description</th>
+                        <th>Montant HT</th>
+                        <th>TVA</th>
+                        <th>Total</th>
+                        <th>Date de facturation</th>
+                        <th>Actions</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
