@@ -56,15 +56,14 @@ class CustomTwigExtension extends AbstractExtension
 
     public function formatSize(float $size): string
     {
-
         if ($size >= 1024 ** 3) {
-            return number_format($size / (1024 ** 3), 6) . ' Go';
+            return number_format($size / (1024 ** 3), 2) . ' Go';
         }
         if ($size >= 1024 ** 2) {
-            return number_format($size / (1024 ** 2), 6) . ' Mo';
+            return number_format($size / (1024 ** 2), 2) . ' Mo';
         }
         if ($size >= 1024) {
-            return number_format($size / 1024, 6) . ' Ko';
+            return number_format($size / 1024, 2) . ' Ko';
         }
 
         return number_format($size, 2) . ' octets';
