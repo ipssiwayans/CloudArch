@@ -1,0 +1,41 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}Fichiers de {{ user.firstname }} {{ user.lastname }}{% endblock %}
+
+{% block content %}
+    <h1>Fichiers de {{ user.firstname }} {{ user.lastname }}</h1>
+    <hr/>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom du fichier</th>
+                        <th>Taille</th>
+                        <th>Format</th>
+                        <th>Date de création</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for file in files %}
+                        <tr>
+                            <td>{{ file.id }}</td>
+                            <td>{{ file.name|name_file }}</td>
+                            <td>{{ file.size|format_size }}</td>
+                            <td>{{ file.format|simple_format }}</td>
+                            <td>{{ file.creation|date('d/m/Y à H:i') }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">Aucun fichier trouvé</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-primary" href="{{ path('app_admin') }}">Retour à l'administration</a>
+{% endblock %}

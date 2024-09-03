@@ -8,12 +8,11 @@
         {% include 'partials/_breadcrumb.html.twig' %}
         <div class="ms-auto">
             <div class="btn-group">
-                <a href="{{ path('app_update') }}" class="btn btn-outline-primary">Modifier</a>
+                <a href="{{ path('app_update', {'id': user.id}) }}" class="btn btn-outline-primary">Modifier</a>
             </div>
         </div>
     </div>
     <!-- end breadcrumb -->
-
 
     <div class="row">
         <div class="col-12 col-lg-8 col-xl-9">
@@ -35,6 +34,7 @@
                             <h3 class="mb-2">{{ user.firstname }} {{ user.lastname }}</h3>
                             <p class="mb-1">{{ user.postalCode }}, {{ user.city }}</p>
                             <p>Stockage total : {{ user.totalStorage }} Go</p>
+                            <p>Stockage utilisé : {{ storageUsed|format_size }}</p>
                             <div class="">
                                 <span class="badge rounded-pill bg-primary">Mes documents</span>
                                 <span class="badge rounded-pill bg-primary">Mes factures</span>
@@ -122,6 +122,4 @@
 
         </div>
     </div>
-    <!--end row-->
-
 {% endblock %}

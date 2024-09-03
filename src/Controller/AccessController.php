@@ -164,9 +164,8 @@ class AccessController extends AbstractController
 
         $totalFiles = $fileManager->getTotalFilesByUser($user);
         $storageUsed = $fileManager->getStorageUsedByUser($user);
-        $storageUsed = $storageUsed / (1024 * 1024 * 1024);
         $totalStorage = $user->getTotalStorage();
-        $storagePercentage = ($storageUsed / $totalStorage) * 100;
+        $storagePercentage = (($storageUsed / (1024 ** 3)) / $totalStorage) * 100;
 
         $invoices = count($user->getInvoices());
 
@@ -180,18 +179,24 @@ class AccessController extends AbstractController
         ]);
     }
 
-    #[Route('/update', name: 'app_update')]
-    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, BreadcrumbService $breadcrumbService, SessionInterface $session): Response
+    #[Route('/update/{id}', name: 'app_update')]
+    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, BreadcrumbService $breadcrumbService, SessionInterface $session, int $id): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
+        $loggedInUser = $this->getUser();
+
         $this->breadcrumbService->setSession($session);
 
         $this->breadcrumbService->addBreadcrumb('app_update');
 
-        $user = $this->getUser();
+        $user = $entityManager->getRepository(User::class)->find($id);
         $countries = Countries::getNames();
+
+        if ($loggedInUser !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error');
+        }
 
         $form = $this->createForm(UpdateFormType::class, $user);
 
@@ -229,7 +234,7 @@ class AccessController extends AbstractController
 
                         $entityManager->flush();
 
-                        $this->addFlash('success', 'Vos informations ont bien été mise à jour !');
+                        $this->addFlash('success', 'Les informations ont bien été mise à jour !');
                     } else {
                         $this->addFlash('danger', "L'ancien mot de passe est incorrect.");
                     }
@@ -237,10 +242,10 @@ class AccessController extends AbstractController
             } else {
                 $entityManager->flush();
 
-                $this->addFlash('success', 'Vos informations ont bien été mise à jour !');
+                $this->addFlash('success', 'Les informations ont bien été mise à jour !');
             }
 
-            return $this->redirectToRoute('app_update');
+            return $this->redirectToRoute('app_update', ['id' => $user->getId()]);
         }
 
         return $this->render('access/update.html.twig', [
@@ -254,14 +259,19 @@ class AccessController extends AbstractController
     /**
      * @throws TransportExceptionInterface
      */
-    #[Route('/delete', name: 'app_delete')]
-    public function delete(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, SessionInterface $session, MailerInterface $mailer): Response
+    #[Route('/delete/{id}', name: 'app_delete')]
+    public function delete(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, SessionInterface $session, MailerInterface $mailer, int $id): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
         }
 
-        $user = $this->getUser();
+        $user = $entityManager->getRepository(User::class)->find($id);
+
+        $imagePath = $this->getParameter('images_directory') . '/' . $user->getImageFilename();
+        if ($user->getImageFilename() && file_exists($imagePath)) {
+            $this->filesystem->remove($imagePath);
+        }
 
         foreach ($user->getFiles() as $file) {
             $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $file->getName();
@@ -273,11 +283,6 @@ class AccessController extends AbstractController
 
         foreach ($user->getInvoices() as $invoice) {
             $entityManager->remove($invoice);
-        }
-
-        $imagePath = $this->getParameter('images_directory') . '/' . $user->getImageFilename();
-        if ($this->filesystem->exists($imagePath)) {
-            $this->filesystem->remove($imagePath);
         }
 
         $entityManager->remove($user);
@@ -294,7 +299,7 @@ class AccessController extends AbstractController
             ->text('Votre compte a bien été supprimé. Nous espérons vous revoir bientôt !');
         $mailer->send($email);
 
-        $this->addFlash('danger', 'Votre compte a bien été supprimé !');
+        $this->addFlash('danger', 'Le compte a bien été supprimé !');
 
         return $this->redirectToRoute('app_registration');
     }

@@ -12,14 +12,16 @@
     </div>
     <!--navigation-->
     <ul class="metismenu" id="menu">
+        {% if is_granted("ROLE_ADMIN") %}
         <li>
-            <a href="{{ path('app_home') }}">
+            <a href="{{ path('app_admin') }}">
                 <div class="parent-icon">
                     <ion-icon name="home-sharp"></ion-icon>
                 </div>
-                <div class="menu-title">Dashboard</div>
+                <div class="menu-title">Admin</div>
             </a>
         </li>
+        {% endif %}
         <li>
             <a href="{{ path('app_file') }}">
                 <div class="parent-icon">
@@ -52,11 +54,11 @@
                 <div class="menu-title">Profil</div>
             </a>
             <ul>
-                <li> <a href="{{ path('app_profile') }}">
+                <li> <a href="{{ path('app_profile', {'id': user.id}) }}">
                         <ion-icon name="person-circle-sharp"></ion-icon>Mon profil
                     </a>
                 </li>
-                <li> <a href="{{ path('app_update') }}">
+                <li> <a href="{{ path('app_update', {'id': user.id}) }}">
                         <ion-icon name="settings-outline"></ion-icon>Paramètres du compte
                     </a>
                 </li>
