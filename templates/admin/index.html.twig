@@ -3,10 +3,12 @@
 {% block title %}Admin | Cloud Arch{% endblock %}
 
 {% block content %}
-    <h1>Administration des Utilisateurs</h1>
-    <hr/>
+    <h1 class="text-center">Administration</h1>
+    <br/>
     <div class="row">
         <div class="card radius-10 w-100">
+            <h2 class="mt-2">Utilisateurs</h2>
+            <hr/>
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -18,7 +20,7 @@
                                 <th>Email</th>
                                 <th>Stockage Utilisé</th>
                                 <th>Stockage Disponible</th>
-                                <th>Actions</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -31,8 +33,8 @@
                                     <td>{{ data.availableStorage|format_size }}</td>
                                     <td>
                                         <div class="d-flex justify-content-evenly">
-                                            <a href="{{ path('admin_user_files', {'id': data.user.id}) }}"><ion-icon name="eye-sharp" style="color: mediumslateblue"></ion-icon></a>
-                                            <a href="{{ path('app_update', {'id': data.user.id}) }}"><ion-icon name="pencil-sharp" style="color: darkorange"></ion-icon></a>
+                                            <a class="btn btn-success" href="{{ path('admin_user_files', {'id': data.user.id}) }}">Voir les fichiers</a>
+                                            <a class="btn btn-primary" href="{{ path('app_update', {'id': data.user.id}) }}">Modifier l'utilisateur</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -46,28 +48,27 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Section des statistiques -->
             <h2>Statistiques des Fichiers</h2>
-            <ul>
-                <li>Nombre total de fichiers uploadés : {{ totalFiles }}</li>
-                <li>Nombre de fichiers uploadés aujourd’hui : {{ todayFiles }}</li>
-            </ul>
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-3">
-                    <h6 class="mb-0">Total de fichiers uploadé</h6>
-                </div>
-                <div class="chart-container3">
-                    <div class="piechart-legend">
-                        <h2 class="mb-1">{{ totalFiles }}</h2>
-                        <h6 class="mb-0">Total des fichiers</h6>
+            <hr/>
+            <div class="card">
+{#                <ul>#}
+{#                    <li>Nombre total de fichiers uploadés : {{ totalFiles }}</li>#}
+{#                    <li>Nombre de fichiers uploadés aujourd’hui : {{ todayFiles }}</li>#}
+{#                </ul>#}
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <h6 class="mb-0">Total de fichiers uploadé</h6>
                     </div>
-                    <canvas id="chart1"></canvas>
+                    <div class="chart-container3">
+                        <div class="piechart-legend">
+                            <h2 class="mb-1">{{ totalFiles }}</h2>
+                            <h6 class="mb-0">Total des fichiers</h6>
+                        </div>
+                        <canvas id="chart1" data-total-files="{{ totalFiles }}" data-today-files="{{ todayFiles }}"></canvas>
+                    </div>
                 </div>
             </div>
-
-            <!-- Section des Fichiers par client -->
-            <h3>Répartition du Nombre de Fichiers par Client</h3>
+            <h2>Répartition du Nombre de Fichiers par Client</h2>
             <hr/>
             <div class="card">
                 <div class="card-body">
