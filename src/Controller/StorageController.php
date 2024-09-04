@@ -3,22 +3,24 @@
 namespace App\Controller;
 
 use App\Entity\Invoice;
+use App\Service\EmailService;
 use App\Service\PaymentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Exception\ApiErrorException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 class StorageController extends AbstractController
 {
     private PaymentService $paymentService;
+    private EmailService $emailService;
 
-    public function __construct(PaymentService $paymentService)
+    public function __construct(PaymentService $paymentService, EmailService $emailService)
     {
         $this->paymentService = $paymentService;
+        $this->emailService = $emailService;
     }
 
     /**
@@ -37,20 +39,16 @@ class StorageController extends AbstractController
         return $this->redirect($session->url, 303);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     #[Route('/storage-payment-success', name: 'app_storage_payment_success')]
     public function paymentSuccess(
         EntityManagerInterface $entityManager,
-        MailerInterface $mailer
     ): Response {
         $user = $this->getUser();
 
-        $email = new Email();
-        $email
-            ->subject('Confirmation de votre achat')
-            ->to($user->getEmail())
-            ->from('contact@stomen.site')
-            ->text('Merci pour votre achat !');
-        $mailer->send($email);
+        $this->emailService->sendEmail('account_storage', $user);
 
         $user
             ->setTotalStorage($user->getTotalStorage() + 20)

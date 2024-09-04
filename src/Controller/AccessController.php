@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\UpdateFormType;
 use App\Manager\FileManager;
+use App\Service\EmailService;
 use App\Service\PaymentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Exception\ApiErrorException;
@@ -19,8 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Intl\Countries;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -31,19 +30,22 @@ class AccessController extends AbstractController
     private Security $security;
     private Filesystem $filesystem;
     private PaymentService $paymentService;
+    private EmailService $emailService;
 
     public function __construct(
         Security $security,
         Filesystem $filesystem,
-        PaymentService $paymentService
+        PaymentService $paymentService,
+        EmailService $emailService
     ) {
         $this->security = $security;
         $this->filesystem = $filesystem;
         $this->paymentService = $paymentService;
+        $this->emailService = $emailService;
     }
 
     #[Route('/registration', name: 'app_registration')]
-    public function registration(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function registration(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -83,17 +85,11 @@ class AccessController extends AbstractController
      * @throws TransportExceptionInterface
      */
     #[Route('/payment-success', name: 'app_payment_success')]
-    public function paymentSuccess(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    public function paymentSuccess(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $request->getSession()->get('registration_data');
 
-        $email = new Email();
-        $email
-            ->subject('Confirmation de votre abonnement')
-            ->to($user->getEmail())
-            ->from('contact@stomen.site')
-            ->text('Merci pour votre inscription . Vous avez souscrit à un abonnement de 20 Go et vous avez maintenant accès à votre espace');
-        $mailer->send($email);
+        $this->emailService->sendEmail('account_creation', $user);
 
         if ($user instanceof User) {
             $user
@@ -147,7 +143,7 @@ class AccessController extends AbstractController
     }
 
     #[Route('/profile', name: 'app_profile')]
-    public function profile(SessionInterface $session, FileManager $fileManager): Response
+    public function profile(FileManager $fileManager): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
@@ -172,7 +168,7 @@ class AccessController extends AbstractController
     }
 
     #[Route('/update/{id}', name: 'app_update')]
-    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, SessionInterface $session, int $id): Response
+    public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, int $id): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
@@ -247,7 +243,7 @@ class AccessController extends AbstractController
      * @throws TransportExceptionInterface
      */
     #[Route('/delete/{id}', name: 'app_delete')]
-    public function delete(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, SessionInterface $session, MailerInterface $mailer, int $id): Response
+    public function delete(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, SessionInterface $session, int $id): Response
     {
         if (!$this->security->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('app_login');
@@ -284,21 +280,8 @@ class AccessController extends AbstractController
             return $this->redirectToRoute('app_admin');
         }
 
-        $email = new Email();
-        $email
-            ->subject('Confirmation de la suppression de votre compte.')
-            ->to($user->getEmail())
-            ->from('contact@stomen.site')
-            ->text('Votre compte a bien été supprimé. Nous espérons vous revoir bientôt !');
-        $mailer->send($email);
-
-        $emailAdmin = new Email();
-        $emailAdmin
-            ->subject('Suppression du compte de ' . $user->getFirstname() . ' ' . $user->getLastname())
-            ->to('Eddy_john.972@hotmail.fr')
-            ->from('contact@stomen.site')
-            ->text('Le compte de ' . $user->getFirstname() . ' ' . $user->getLastname() . ' a bien été supprimé. Le nombre de fichier supprimé est de ' . count($user->getFiles()));
-        $mailer->send($emailAdmin);
+        $this->emailService->sendEmail('account_deletion', $user);
+        $this->emailService->sendEmail('admin_notification', $user);
 
         $this->addFlash('danger', 'Le compte a bien été supprimé !');
 
