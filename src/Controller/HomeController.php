@@ -26,22 +26,7 @@ class HomeController extends AbstractController
 
         $user = $this->getUser();
 
-        return $this->render('app.html.twig', [
-            'user' => $user,
-        ]);
-    }
-
-    #[Route('/complete', name: 'app_complete')]
-    public function complete(): Response
-    {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-        $user = $this->getUser();
-
-        return $this->render('prices/complete.html.twig', [
-            'user' => $user,
-        ]);
+        return $this->redirectToRoute('app_profile');
     }
 
     #[Route('/error', name: 'app_error')]

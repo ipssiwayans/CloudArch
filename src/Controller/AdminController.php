@@ -34,6 +34,7 @@ class AdminController extends AbstractController
         $userData = [];
         foreach ($users as $user) {
             $usedStorage = 0;
+            $filesPerUser = $fileManager->getTotalFilesByUser($user);
             foreach ($user->getFiles() as $file) {
                 $usedStorage += $file->getSize();
             }
@@ -46,18 +47,17 @@ class AdminController extends AbstractController
                 'user' => $user,
                 'usedStorage' => $usedStorage,
                 'availableStorage' => $availableStorage,
+                'filesPerUser' => $filesPerUser,
             ];
         }
 
         $totalFiles = $fileManager->getTotalFiles();
         $todayFiles = $fileRepository->getCountTodayFiles();
-        $filesPerUser = $userRepository->getFilesPerUser();
 
         return $this->render('admin/index.html.twig', [
             'users' => $userData,
             'totalFiles' => $totalFiles,
             'todayFiles' => $todayFiles,
-            'filesPerUser' => $filesPerUser,
             'user' => $user,
         ]);
     }

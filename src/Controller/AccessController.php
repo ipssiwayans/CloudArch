@@ -275,8 +275,14 @@ class AccessController extends AbstractController
         $entityManager->remove($user);
         $entityManager->flush();
 
-        $tokenStorage->setToken(null);
-        $session->invalidate();
+        if ($this->getUser() == $user) {
+            $tokenStorage->setToken(null);
+            $session->invalidate();
+        } else {
+            $this->addFlash('danger', 'Le compte a bien été supprimé !');
+
+            return $this->redirectToRoute('app_admin');
+        }
 
         $email = new Email();
         $email
