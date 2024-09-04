@@ -21,6 +21,16 @@ class FileRepository extends ServiceEntityRepository
         parent::__construct($registry, File::class);
     }
 
+    public function getCountTodayFiles(): int
+    {
+        return $this->createQueryBuilder('f')
+            ->select('count(f.id)')
+            ->where('f.creation >= :today')
+            ->setParameter('today', new \DateTime('today'))
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     //    /**
     //     * @return File[] Returns an array of File objects
     //     */

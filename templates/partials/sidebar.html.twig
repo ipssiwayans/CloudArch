@@ -1,0 +1,59 @@
+<aside class="sidebar-wrapper" data-simplebar="true">
+    <div class="sidebar-header">
+        <div>
+            <img src="{{ asset('images/logoWhite.png') }}" class="logo-icon" alt="logo icon">
+        </div>
+        <div>
+            <h4 class="logo-text">CloudArch</h4>
+        </div>
+        <div class="toggle-icon ms-auto">
+            <ion-icon name="menu-sharp"></ion-icon>
+        </div>
+    </div>
+    <ul class="metismenu" id="menu">
+        {% if is_granted("ROLE_ADMIN") %}
+            <li>
+                <a href="{{ path('app_admin') }}">
+                    <div class="parent-icon">
+                        <ion-icon name="home-sharp"></ion-icon>
+                    </div>
+                    <div class="menu-title">Admin</div>
+                </a>
+            </li>
+        {% endif %}
+        <li>
+            <a href="{{ path('app_file') }}">
+                <div class="parent-icon">
+                    <i class="lni lni-paperclip"></i>
+                </div>
+                <div class="menu-title">Mes fichiers</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('app_invoice_all') }}">
+                <div class="parent-icon">
+                    <ion-icon name="receipt-sharp"></ion-icon>
+                </div>
+                <div class="menu-title">Mes factures</div>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:" class="has-arrow">
+                <div class="parent-icon">
+                    <ion-icon name="person-outline"></ion-icon>
+                </div>
+                <div class="menu-title">Profil</div>
+            </a>
+            <ul>
+                <li> <a href="{{ path('app_profile', {'id': app.user.id}) }}">
+                        <ion-icon name="person-circle-sharp"></ion-icon>Mon profil
+                    </a>
+                </li>
+                <li> <a href="{{ path('app_update', {'id': app.user.id}) }}">
+                        <ion-icon name="settings-outline"></ion-icon>Paramètres du compte
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</aside>

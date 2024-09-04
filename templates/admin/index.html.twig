@@ -1,0 +1,77 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}Admin | Cloud Arch{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Administration</h1>
+    <br/>
+    <div class="row">
+        <div class="card radius-10 w-100">
+            <h2 class="mt-2">Utilisateurs</h2>
+            <hr/>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="userData" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Nombre de fichier</th>
+                                <th>Stockage Utilisé</th>
+                                <th>Stockage Disponible</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in users %}
+                                <tr>
+                                    <td>{{ data.user.id }}</td>
+                                    <td>{{ data.user.firstname }} {{ data.user.lastname }}</td>
+                                    <td>{{ data.user.email }}</td>
+                                    <td>{{ data.filesPerUser }}</td>
+                                    <td>{{ data.usedStorage|format_size }}</td>
+                                    <td>{{ data.availableStorage|format_size }}</td>
+                                    <td>
+                                        <div class="d-flex justify-content-evenly">
+                                            <a class="btn btn-success" href="{{ path('admin_user_files', {'id': data.user.id}) }}">Fichiers</a>
+                                            <a class="btn btn-primary" href="{{ path('app_update', {'id': data.user.id}) }}">Modifier l'utilisateur</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center">Aucun utilisateur trouvé</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <h2>Statistiques des Fichiers</h2>
+            <hr/>
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <h6 class="mb-0">Total de fichiers uploadé</h6>
+                    </div>
+                    <div class="d-flex align-items-center font-13">
+                        <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1 text-primary"></i>Nombre de fichiers uploadés aujourd’hui : {{ todayFiles }}</span>
+                    </div>
+                    <div class="d-flex align-items-center font-13 mt-2">
+                        <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1 text-danger"></i>Nombre total de fichiers uploadés : {{ totalFiles }}</span>
+                    </div>
+                    <div class="chart-container3">
+                        <div class="piechart-legend">
+                            <h2 class="mb-1">{{ totalFiles }}</h2>
+                            <h6 class="mb-0">Total des fichiers</h6>
+                        </div>
+                        <canvas id="chart1" data-total-files="{{ totalFiles }}" data-today-files="{{ todayFiles }}"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

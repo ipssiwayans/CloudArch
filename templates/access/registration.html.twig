@@ -3,96 +3,109 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-  <div class="container">
-    <div class="row">
-      <div class="col-xl-5 col-lg-6 col-md-7 mx-auto mt-5">
-        <div class="card radius-10">
-          <div class="card-body p-4">
-            <div class="mx-auto my-auto d-flex align-items-center justify-content-center">
-              <img src="{{ asset('/images/logoWhite.png') }}" alt="logo ArchCloud" width="150">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-5 col-lg-6 col-md-7 mx-auto mt-5">
+                <div class="card radius-10">
+                    <div class="card-body p-4">
+                        <div class="mx-auto my-auto d-flex align-items-center justify-content-center">
+                            <img src="{{ asset('/images/logoWhite.png') }}" alt="logo ArchCloud"
+                                 width="200">
+                        </div>
+                        <div class="text-center">
+                            <h4>S'inscrire</h4>
+                            <p>Créer un compte</p>
+                        </div>
+                        {{ form_start(registrationForm, {'attr': {'class': 'form-body row g-3'}}) }}
+                        <div class="col-12">
+                            {{ form_label(registrationForm.firstname) }}
+                            {{ form_widget(registrationForm.firstname) }}
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.firstname) }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            {{ form_label(registrationForm.lastname) }}
+                            {{ form_widget(registrationForm.lastname) }}
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.lastname) }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            {{ form_label(registrationForm.email) }}
+                            {{ form_widget(registrationForm.email) }}
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.email) }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            {{ form_label(registrationForm.password) }}
+                            {{ form_widget(registrationForm.password) }}
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.password) }}
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            {{ form_label(registrationForm.street_number) }}
+                            {{ form_widget(registrationForm.street_number) }}
+                        </div>
+                        <div class="col-8">
+                            {{ form_label(registrationForm.street_address) }}
+                            {{ form_widget(registrationForm.street_address) }}
+                        </div>
+                        <div class="form-error">{{ form_errors(registrationForm.street_number) }}</div>
+                        <div class="form-error">{{ form_errors(registrationForm.street_address) }}</div>
+                        <div class="col-12">
+                            {{ form_label(registrationForm.postal_code) }}
+                            {{ form_widget(registrationForm.postal_code) }}
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.postal_code) }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            {{ form_label(registrationForm.city) }}
+                            {{ form_widget(registrationForm.city) }}
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.city) }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            {{ form_label(registrationForm.country) }}
+                            {{ form_widget(registrationForm.country) }}
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.country) }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            {{ form_label(registrationForm.phone) }}
+                            {{ form_widget(registrationForm.phone) }}
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.phone) }}
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="form-check">
+                                {{ form_widget(registrationForm.termsAgreed) }}
+                                {{ form_label(registrationForm.termsAgreed) }}
+                            </div>
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.termsAgreed) }}
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Continuer vers le paiement</button>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12 text-center">
+                            <p class="mb-0">Vous avez déjà un compte ?</p>
+                            <a href="{{ path('app_login') }}">Se
+                                connecter</a>
+                        </div>
+                        {{ form_end(registrationForm) }}
+                    </div>
+                </div>
             </div>
-            <div class="text-center">
-              <h4>S'inscrire</h4>
-              <p>Créer un compte</p>
-            </div>
-            {{ form_start(registrationForm, {'attr': {'class': 'form-body row g-3'}}) }}
-            <div class="col-12">
-              {{ form_label(registrationForm.firstname) }}
-              {{ form_widget(registrationForm.firstname, {'attr': {'class': 'form-control'}}) }}
-              {{ form_errors(registrationForm.firstname) }}
-            </div>
-            <div class="col-12">
-                {{ form_label(registrationForm.lastname) }}
-                {{ form_widget(registrationForm.lastname, {'attr': {'class': 'form-control'}}) }}
-                {{ form_errors(registrationForm.lastname) }}
-            </div>
-            <div class="col-12">
-              {{ form_label(registrationForm.email) }}
-                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
-                {{ form_errors(registrationForm.email) }}
-            </div>
-            <div class="col-12">
-                {{ form_label(registrationForm.password) }}
-                {{ form_widget(registrationForm.password, {'attr': {'class': 'form-control'}}) }}
-                {{ form_errors(registrationForm.password) }}
-            </div>
-            <div class="col-4">
-              {{ form_label(registrationForm.street_number) }}
-              {{ form_widget(registrationForm.street_number,{'attr': {'class' : 'form-control'}}) }}
-            </div>
-            <div class="col-8">
-                {{ form_label(registrationForm.street_address) }}
-                {{ form_widget(registrationForm.street_address, {'attr': {'class': 'form-control'}}) }}
-            </div>
-            {# Affichage des erreurs en dessous pour raison de mise en page #}
-            <div class="mt-1">{{ form_errors(registrationForm.street_number) }}</div>
-            <div class="mt-1">{{ form_errors(registrationForm.street_address) }}</div>
-            <div class="col-12">
-              {{ form_label(registrationForm.postal_code) }}
-              {{ form_widget(registrationForm.postal_code, {'attr': {'class': 'form-control'}}) }}
-              {{ form_errors(registrationForm.postal_code) }}
-            </div>
-            <div class="col-12">
-              {{ form_label(registrationForm.city) }}
-              {{ form_widget(registrationForm.city, {'attr': {'class': 'form-control'}}) }}
-              {{ form_errors(registrationForm.city) }}
-            </div>
-            <div class="col-12">
-                {{ form_label(registrationForm.country) }}
-              {{ form_widget(registrationForm.country,{'attr': {'class': 'form-control'}}) }}
-              {{ form_errors(registrationForm.country) }}
-            </div>
-            <div class="col-12 col-lg-12">
-              <div class="form-check">
-                {{ form_widget(registrationForm.termsAgreed) }}
-                {{ form_label(registrationForm.termsAgreed) }}
-                {{ form_errors(registrationForm.termsAgreed) }}
-              </div>
-            </div>
-            <div class="col-12 col-lg-12">
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary">S'inscrire</button>
-              </div>
-            </div>
-            <div class="col-12 col-lg-12">
-              <div class="position-relative border-bottom my-3">
-                <div class="position-absolute seperator translate-middle-y">ou continuer avec</div>
-              </div>
-            </div>
-            <div class="col-12 col-lg-12">
-              <div class="social-login d-flex flex-row align-items-center justify-content-center gap-2 my-2">
-                <a href="javascript:;" class=""><img src="{{ asset('assets/images/icons/facebook.png') }}" alt=""></a>
-                <a href="javascript:;" class=""><img src="{{ asset('assets/images/icons//apple-black-logo.png') }}" alt=""></a>
-                <a href="javascript:;" class=""><img src="{{ asset('assets/images/icons/google.png') }}" alt=""></a>
-              </div>
-            </div>
-            <div class="col-12 col-lg-12 text-center">
-              <p class="mb-0">Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></p>
-            </div>
-            {{ form_end(registrationForm) }}
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 {% endblock %}

@@ -17,18 +17,21 @@ class File
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $upload_date = null;
-
     #[ORM\Column]
     private ?float $size = null;
 
     #[ORM\Column(length: 255)]
     private ?string $format = null;
 
-    #[ORM\ManyToOne(inversedBy: 'number_file')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $latestChanges = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $creation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'files')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -43,18 +46,6 @@ class File
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getUploadDate(): ?\DateTimeInterface
-    {
-        return $this->upload_date;
-    }
-
-    public function setUploadDate(\DateTimeInterface $upload_date): static
-    {
-        $this->upload_date = $upload_date;
 
         return $this;
     }
@@ -83,14 +74,38 @@ class File
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getLatestChanges(): ?\DateTimeInterface
     {
-        return $this->user_id;
+        return $this->latestChanges;
     }
 
-    public function setUserId(?User $user_id): static
+    public function setLatestChanges(?\DateTimeInterface $latestChanges): static
     {
-        $this->user_id = $user_id;
+        $this->latestChanges = $latestChanges;
+
+        return $this;
+    }
+
+    public function getCreation(): ?\DateTimeInterface
+    {
+        return $this->creation;
+    }
+
+    public function setCreation(\DateTimeInterface $creation): static
+    {
+        $this->creation = $creation;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

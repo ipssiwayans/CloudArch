@@ -4,12 +4,14 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    images_directory: '%kernel.project_dir%/public/uploads/images'
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means                   # fetching services directly from the container via $container->get() won't work.
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -20,5 +22,15 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Twig\CustomTwigExtension:
+        tags: [ 'twig.extension' ]
+
+    App\Service\PaymentService:
+        arguments:
+            $urlGenerator: '@router.default'
+
+    App\Service\EmailService:
+        arguments:
+            $mailer: '@mailer.mailer'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

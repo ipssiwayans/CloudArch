@@ -1,0 +1,21 @@
+.form-error {
+    color: #FFFFFF;
+    background-color: #DC3545FF;
+    font-weight: bold;
+}
+
+.form-error li {
+    list-style-type: none;
+    margin: 0;
+    text-align: center;
+}
+
+.page-item.active .page-link {
+    background-color: #923eb9 !important;
+    border-color: #923eb9 !important;
+    color: #FFFFFF !important;
+}
+
+.page-link {
+    color: #923eb9 !important;
+}

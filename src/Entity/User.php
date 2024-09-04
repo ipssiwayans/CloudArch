@@ -8,12 +8,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: "L'adresse email est déjà utilisée")]
-class User implements UserInterface , PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -31,6 +31,9 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageFilename;
 
     #[ORM\Column(length: 255)]
     private ?array $roles = ['ROLE_USER'];
@@ -56,18 +59,21 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $registration_date = null;
 
-    #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'user_id', orphanRemoval: true)]
-    private Collection $number_invoices;
+    #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'user')]
+    private Collection $invoices;
 
-    #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'user_id', orphanRemoval: true)]
-    private Collection $number_file;
+    #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'user')]
+    private Collection $files;
+
+    #[ORM\Column]
+    private ?string $phone = null;
 
     public function __construct()
     {
-        $this->number_invoices = new ArrayCollection();
-        $this->number_file = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
+        $this->files = new ArrayCollection();
+        $this->registration_date = new \DateTime();
     }
-
 
     public function getId(): ?int
     {
@@ -121,6 +127,18 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    public function setImageFilename(?string $imageFilename): self
+    {
+        $this->imageFilename = $imageFilename;
 
         return $this;
     }
@@ -210,66 +228,6 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Invoice>
-     */
-    public function getNumberInvoices(): Collection
-    {
-        return $this->number_invoices;
-    }
-
-    public function addNumberInvoice(Invoice $numberInvoice): static
-    {
-        if (!$this->number_invoices->contains($numberInvoice)) {
-            $this->number_invoices->add($numberInvoice);
-            $numberInvoice->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNumberInvoice(Invoice $numberInvoice): static
-    {
-        if ($this->number_invoices->removeElement($numberInvoice)) {
-            // set the owning side to null (unless already changed)
-            if ($numberInvoice->getUserId() === $this) {
-                $numberInvoice->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, File>
-     */
-    public function getNumberFile(): Collection
-    {
-        return $this->number_file;
-    }
-
-    public function addNumberFile(File $numberFile): static
-    {
-        if (!$this->number_file->contains($numberFile)) {
-            $this->number_file->add($numberFile);
-            $numberFile->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNumberFile(File $numberFile): static
-    {
-        if ($this->number_file->removeElement($numberFile)) {
-            // set the owning side to null (unless already changed)
-            if ($numberFile->getUserId() === $this) {
-                $numberFile->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * A visual identifier that represents this user.
      *
      * @see UserInterface
@@ -305,5 +263,77 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Invoice>
+     */
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+
+    public function addInvoice(Invoice $invoice): static
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices->add($invoice);
+            $invoice->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): static
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getUser() === $this) {
+                $invoice->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, File>
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(File $file): static
+    {
+        if (!$this->files->contains($file)) {
+            $this->files->add($file);
+            $file->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(File $file): static
+    {
+        if ($this->files->removeElement($file)) {
+            // set the owning side to null (unless already changed)
+            if ($file->getUser() === $this) {
+                $file->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
+
+        return $this;
     }
 }
