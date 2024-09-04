@@ -72,19 +72,19 @@ class CustomTwigExtension extends AbstractExtension
         return $parts[0];
     }
 
-    public function formatSize(float $size): string
+    public function formatSize(float $size, $type = true): string
     {
         if ($size >= 1024 ** 3) {
-            return number_format($size / (1024 ** 3), 2) . ' Go';
+            return number_format($size / (1024 ** 3), 2) . ($type ? ' Go' : '');
         }
         if ($size >= 1024 ** 2) {
-            return number_format($size / (1024 ** 2), 2) . ' Mo';
+            return number_format($size / (1024 ** 2), 2) . ($type ? ' Mo' : '');
         }
         if ($size >= 1024) {
-            return number_format($size / 1024, 2) . ' Ko';
+            return number_format($size / 1024, 2) . ($type ? ' Ko' : '');
         }
 
-        return number_format($size, 2) . ' octets';
+        return number_format($size, 2) . ($type ? ' octets' : '');
     }
 
     public function typeFile(string $mimeType): string

@@ -21,13 +21,11 @@
                     <div class="mt-5 d-flex align-items-start justify-content-between">
                         <div class="">
                             <h3 class="mb-2">{{ user.firstname }} {{ user.lastname }}</h3>
-                            <p class="mb-1">{{ user.postalCode }}, {{ user.city }}</p>
-                            <p>Stockage total : {{ user.totalStorage }} Go</p>
-                            <p>Stockage utilisé : {{ storageUsed|format_size }}</p>
-                            <div class="">
-                                <span class="badge rounded-pill bg-primary">Mes documents</span>
-                                <span class="badge rounded-pill bg-primary">Mes factures</span>
-                                <span class="badge rounded-pill bg-primary">Plus d'espaces</span>
+                            <div class="d-flex flex-column gap-2">
+                                <span>{{ user.streetNumber }} {{ user.streetAddress }} , {{ user.postalCode }} , {{ user.city }}</span>
+                                <span>{{ user.country }}</span>
+                                <span>{{ user.phone }}</span>
+                                <strong><span>Inscris depuis le : {{ user.registrationDate|date('d/m/Y') }}</span></strong>
                             </div>
                         </div>
                         <div class="">
@@ -37,12 +35,26 @@
                 </div>
             </div>
             <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Espace de stockage</h6>
+                </div>
                 <div class="card-body">
-                    <h4 class="mb-2">Tableau de bord</h4>
-                    <p>
-                        Bienvenue sur votre tableau de bord. Vous pouvez consulter vos informations, vos documents, vos factures et
-                        augmenter votre stockage en quelques clics !
-                    </p>
+                    <div class="d-flex align-items-center font-13">
+                        <span class="border px-1 rounded cursor-pointer">Stockage total : {{ user.totalStorage }} Go</span>
+                    </div>
+                    <div class="d-flex align-items-center font-13 mt-2">
+                        <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1 text-danger"></i>Stockage utilisé : {{ storageUsed|format_size }}</span>
+                    </div>
+                    <div class="d-flex align-items-center font-13 mt-2">
+                        <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1 text-primary"></i>Stockage disponible : {{ availableStorage|format_size }}</span>
+                    </div>
+                    <div class="chart-container3">
+                        <div class="piechart-legend">
+                            <h2 class="mb-1">{{ user.totalStorage }} Go</h2>
+                            <h6 class="mb-0">Stockage total</h6>
+                        </div>
+                        <canvas id="chart2" data-used-storage="{{ (storageUsed / (1024 ** 3) )|format_size(false) }}" data-available-storage="{{ availableStorage|format_size(false) }}"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
