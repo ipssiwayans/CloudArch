@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class UpdateFormType extends AbstractType
 {
@@ -103,10 +104,9 @@ class UpdateFormType extends AbstractType
                         'message' => 'Le nouveau mot de passe est requis.',
                         'groups' => ['password_change'],
                     ]),
-                    new Length([
-                        'min' => 8,
-                        'minMessage' => 'Votre mot de passe doit contenir au moins 8 caractères.',
-                        'max' => 1024,
+                    new Regex([
+                        'pattern' => '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
+                        'message' => 'Le mot de passe doit contenir au moins 8 caractères et inclure au moins une lettre et un chiffre.',
                     ]),
                 ],
                 'attr' => [
