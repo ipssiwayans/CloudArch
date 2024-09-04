@@ -32,7 +32,7 @@
                     {% for file in files %}
                         <tr>
                             <td>{{ file.name|name_file }}</td>
-                            <td>{{ file.size|filesize }}</td>
+                            <td>{{ file.size|format_size }}</td>
                             <td>{{ file.format|simple_format }}</td>
                             <td>{{ file.format|type_file }}</td>
                             <td>{{ file.creation|date('d/m/Y à H\\hi', 'Europe/Paris') }}</td>

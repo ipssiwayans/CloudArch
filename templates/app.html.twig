@@ -11,8 +11,6 @@
         <script src="{{ asset('assets/js/pace.min.js') }}"></script>
 
         <!--plugins-->
-        <link href="{{ asset('assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet"/>
-        <link href="{{ asset('assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet"/>
         <link href="{{ asset('assets/plugins/metismenu/css/metisMenu.min.css') }}" rel="stylesheet"/>
         <link href="{{ asset('assets/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet"/>
 
@@ -62,14 +60,6 @@
         <!-- end page content wrapper-->
     {% endblock %}
 
-    {% block backToTop %}
-        <!--Start Back To Top Button-->
-        <a href="javaScript:" class="back-to-top">
-            <ion-icon name="arrow-up-outline"></ion-icon>
-        </a>
-        <!--End Back To Top Button-->
-    {% endblock %}
-
     {% block switcher %}{% endblock %}
 
     {% block overlay %}
@@ -81,32 +71,14 @@
 {% block scripts %}
     <!-- JS Files-->
     <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/simplebar/js/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/metismenu/js/metisMenu.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <!--plugins-->
-    <script src="{{ asset('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/js/table-datatable.js') }}"></script>
 
-    <!-- Easy Pie Chart JS -->
-    <script src="{{ asset('assets/plugins/jquery.easy-pie-chart/jquery.easypiechart.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/jquery.easy-pie-chart/easy-pie-chart.init.js') }}"></script>
-
-    <!-- KNOB JS -->
-    <!--[if IE]>
-            <script type="text/javascript" src="{{ asset('assets/plugins/jquery-knob/excanvas.js') }}"></script>
-            <![endif]-->
-    <script src="{{ asset('assets/plugins/jquery-knob/excanvas.js') }}"></script>
-    <script src="{{ asset('assets/plugins/jquery-knob/jquery.knob.js') }}"></script>
-
-    <script>
-        $(function () {
-            $(".knob").knob();
-        });
-    </script>
     <script src="{{ asset('assets/js/index.js') }}"></script>
     <script src="{{ asset('assets/plugins/chartjs/chart.min.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
