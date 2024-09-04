@@ -286,6 +286,14 @@ class AccessController extends AbstractController
             ->text('Votre compte a bien été supprimé. Nous espérons vous revoir bientôt !');
         $mailer->send($email);
 
+        $emailAdmin = new Email();
+        $emailAdmin
+            ->subject('Suppression du compte de ' . $user->getFirstname() . ' ' . $user->getLastname())
+            ->to('Eddy_john.972@hotmail.fr')
+            ->from('contact@stomen.site')
+            ->text('Le compte de ' . $user->getFirstname() . ' ' . $user->getLastname() . ' a bien été supprimé. Le nombre de fichier supprimé est de ' . count($user->getFiles()));
+        $mailer->send($emailAdmin);
+
         $this->addFlash('danger', 'Le compte a bien été supprimé !');
 
         return $this->redirectToRoute('app_registration');

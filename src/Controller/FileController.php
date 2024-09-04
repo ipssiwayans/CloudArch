@@ -80,7 +80,7 @@ class FileController extends AbstractController
 
                     return $this->redirectToRoute('app_file');
                 }
-                $this->addFlash('error', 'Veuillez sélectionner un fichier');
+                $this->addFlash('danger', 'Veuillez sélectionner un fichier');
             }
         }
 
@@ -153,7 +153,7 @@ class FileController extends AbstractController
             return $this->file($filePath, $file->getName());
         }
 
-        $this->addFlash('error', 'Fichier introuvable.');
+        $this->addFlash('danger', 'Fichier introuvable.');
 
         return $this->redirectToRoute('app_file');
     }
