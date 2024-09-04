@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class RegistrationFormType extends AbstractType
@@ -79,15 +80,10 @@ class RegistrationFormType extends AbstractType
                     new NotBlank([
                         'message' => 'Le mot de passe est requis.',
                     ]),
-                    //                    new Regex([
-                    //                        'pattern' => '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
-                    //                        'message' => 'Le mot de passe doit contenir au moins 8 caractères et inclure au moins une lettre et un chiffre.',
-                    //                    ]),
-                    //                    new Length([
-                    //                        'min' => 8,
-                    //                        'minMessage' => 'Votre mot de passe doit contenir au moins 8 caractères.',
-                    //                        'max' => 1024,
-                    //                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
+                        'message' => 'Le mot de passe doit contenir au moins 8 caractères et inclure au moins une lettre et un chiffre.',
+                    ]),
                 ],
                 'attr' => [
                     'placeholder' => 'Entrez votre mot de passe',

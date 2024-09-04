@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('reset_password_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
+                <div class="reset-passowrd">
+                    <div class="card radius-10 w-100">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h4>Réinitialisation du mot de passe</h4>
+                                {{ form_start(requestForm, {'attr': {'class': 'form-body row g-3'}}) }}
+                                <div class="col-12">
+                                    {{ form_label(requestForm.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(requestForm.email, {'attr': {'class': 'form-control', 'id': 'inputEmail', 'placeholder': 'exemple@cloudarch.com'}}) }}
+                                </div>
+                                <div class="col-12">
+                                    <small>
+                                        Entrer votre adresse email pour recevoir un lien de réinitialisation de mot de
+                                        passe.
+                                    </small>
+                                </div>
+                                <div class="col-12 col-lg-12">
+                                    <div class="d-grid">
+                                        <button class="btn btn-primary">Envoyer un mot de passe de réinitialisation
+                                        </button>
+                                    </div>
+                                </div>
+                                {{ form_end(requestForm) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
