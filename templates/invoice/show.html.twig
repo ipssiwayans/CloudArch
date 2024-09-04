@@ -30,7 +30,7 @@
                                 2 rue Paris<br>
                                 Paris, 75000<br>
                                 FR<br>
-                                01 48 51 25 41<br>
+                                SIRET 92171746800018<br>
                             </address>
                         </div>
                     </div>
@@ -64,6 +64,7 @@
                         <thead>
                         <tr>
                             <th>DESCRIPTION</th>
+                            <th class="text-right" style="width: 10%">QUANTITE</th>
                             <th class="text-center" style="width: 10%;">PRIX HT</th>
                             <th class="text-center" style="width: 10%;">TVA</th>
                             <th class="text-right" style="width: 20%;">PRIX TTC</th>
@@ -75,6 +76,7 @@
                                 <span class="text-inverse">{{ invoice.object }}</span><br>
                                 <small>{{ invoice.description }}</small>
                             </td>
+                            <td class="text-center">{{ invoice.quantity }}</td>
                             <td class="text-center">€{{ invoice.amountHt|number_format(2, '.', ',') }}</td>
                             <td class="text-center">€{{ invoice.amountTva|number_format(2, '.', ',') }}</td>
                             <td class="text-right">€{{ invoice.totalAmount|number_format(2, '.', ',') }}</td>
