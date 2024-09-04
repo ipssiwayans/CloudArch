@@ -58,10 +58,10 @@
                         <h6 class="mb-0">Total de fichiers uploadé</h6>
                     </div>
                     <div class="d-flex align-items-center font-13">
-                        <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1 text-primary"></i>Nombre de fichiers uploadés aujourd’hui : {{ totalFiles }}</span>
+                        <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1 text-primary"></i>Nombre de fichiers uploadés aujourd’hui : {{ todayFiles }}</span>
                     </div>
                     <div class="d-flex align-items-center font-13 mt-2">
-                        <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1 text-danger"></i>Nombre total de fichiers uploadés : {{ todayFiles }}</span>
+                        <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1 text-danger"></i>Nombre total de fichiers uploadés : {{ totalFiles }}</span>
                     </div>
                     <div class="chart-container3">
                         <div class="piechart-legend">
@@ -74,9 +74,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block scriptsPerso %}
-    <script src="{{ asset('assets/js/index.js') }}"></script>
-    <script src="{{ asset('assets/plugins/chartjs/chart.min.js') }}"></script>
 {% endblock %}

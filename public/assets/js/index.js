@@ -11,8 +11,40 @@ $(function() {
             datasets: [{
                 data: [totalFiles, filesToday],
                 backgroundColor: [
-                    '#f73757', // Rouge
-                    '#923eb9'  // Violet
+                    '#f73757',
+                    '#923eb9'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            cutout: 125,
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            }
+        }
+    });
+});
+
+$(function() {
+    var chartElement = document.getElementById('chart2');
+    var totalStorage = chartElement.getAttribute('data-total-storage');
+    var usedStorage = chartElement.getAttribute('data-used-storage');
+    var availableStorage = chartElement.getAttribute('data-available-storage');
+
+    var ctx = chartElement.getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Stockage utilisé', 'Stockage disponible'],
+            datasets: [{
+                data: [usedStorage, availableStorage],
+                backgroundColor: [
+                    '#f73757',
+                    '#923eb9'
                 ],
                 borderWidth: 1
             }]

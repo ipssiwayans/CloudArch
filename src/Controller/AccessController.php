@@ -158,6 +158,7 @@ class AccessController extends AbstractController
         $totalFiles = $fileManager->getTotalFilesByUser($user);
         $storageUsed = $fileManager->getStorageUsedByUser($user);
         $totalStorage = $user->getTotalStorage();
+        $availableStorage = ($totalStorage * (1024 ** 3)) - $storageUsed;
         $storagePercentage = (($storageUsed / (1024 ** 3)) / $totalStorage) * 100;
 
         $invoices = count($user->getInvoices());
@@ -167,6 +168,7 @@ class AccessController extends AbstractController
             'totalFiles' => $totalFiles,
             'storageUsed' => $storageUsed,
             'storagePercentage' => $storagePercentage,
+            'availableStorage' => $availableStorage,
             'invoices' => $invoices,
         ]);
     }
