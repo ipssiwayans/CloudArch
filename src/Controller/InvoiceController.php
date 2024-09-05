@@ -8,7 +8,6 @@ use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Attribute\Route;
 use Twig\Environment;
 
@@ -16,7 +15,7 @@ use Twig\Environment;
 class InvoiceController extends AbstractController
 {
     #[Route('/all', name: 'app_invoice_all')]
-    public function allInvoice(Session $session, InvoiceManager $invoiceManager): Response
+    public function allInvoice(InvoiceManager $invoiceManager): Response
     {
         $invoices = $invoiceManager->getInvoiceByUser($this->getUser());
 

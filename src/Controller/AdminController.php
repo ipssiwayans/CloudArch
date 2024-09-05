@@ -24,10 +24,6 @@ class AdminController extends AbstractController
     #[Route('/admin', name: 'app_admin')]
     public function index(UserRepository $userRepository, FileRepository $fileRepository, FileManager $fileManager): Response
     {
-        if (!$this->security->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_profile');
-        }
-
         $user = $this->getUser();
         $users = $userRepository->findAll();
 
@@ -65,10 +61,6 @@ class AdminController extends AbstractController
     #[Route('/admin/user/{id}/files', name: 'admin_user_files')]
     public function userFiles(int $id, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->security->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_profile');
-        }
-
         $user = $entityManager->getRepository(User::class)->find($id);
 
         if (!$user) {

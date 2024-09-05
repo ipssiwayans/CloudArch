@@ -25,12 +25,8 @@ class FileController extends AbstractController
     }
 
     #[Route('/', name: 'app_file')]
-    public function index(FileManager $fileManager, SessionInterface $session): Response
+    public function index(FileManager $fileManager): Response
     {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-
         $user = $this->security->getUser();
 
         $files = $fileManager->getUserFiles();
@@ -48,10 +44,6 @@ class FileController extends AbstractController
         Security $security,
         SessionInterface $session
     ): Response {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-
         $user = $this->security->getUser();
 
         $fileEntity = new File();
@@ -91,12 +83,8 @@ class FileController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'app_edit_file', methods: ['GET', 'POST'])]
-    public function edit(Request $request, File $file, EntityManagerInterface $entityManager, SessionInterface $session): Response
+    public function edit(Request $request, File $file, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-
         $user = $this->security->getUser();
 
         $oldFileName = $file->getName();
@@ -131,7 +119,7 @@ class FileController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'app_delete_file', methods: ['POST'])]
-    public function delete(Request $request, File $file, EntityManagerInterface $entityManager): Response
+    public function delete(File $file, EntityManagerInterface $entityManager): Response
     {
         $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $file->getName();
         if (file_exists($filePath)) {

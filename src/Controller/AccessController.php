@@ -131,24 +131,9 @@ class AccessController extends AbstractController
         return $this->redirectToRoute('app_registration');
     }
 
-    #[Route(path: '/reset', name: 'app_reset_password')]
-    public function resetPassword(): Response
-    {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-        $user = $this->getUser();
-
-        return $this->render('access/reset.html.twig');
-    }
-
     #[Route('/profile', name: 'app_profile')]
     public function profile(FileManager $fileManager): Response
     {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-
         $user = $this->getUser();
 
         $totalFiles = $fileManager->getTotalFilesByUser($user);
@@ -172,15 +157,10 @@ class AccessController extends AbstractController
     #[Route('/update/{id}', name: 'app_update')]
     public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, int $id): Response
     {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-        $loggedInUser = $this->getUser();
-
         $user = $entityManager->getRepository(User::class)->find($id);
         $countries = Countries::getNames();
 
-        if ($loggedInUser !== $user && !$this->isGranted('ROLE_ADMIN')) {
+        if ($this->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error');
         }
 
@@ -247,11 +227,11 @@ class AccessController extends AbstractController
     #[Route('/delete/{id}', name: 'app_delete')]
     public function delete(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, SessionInterface $session, int $id): Response
     {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-
         $user = $entityManager->getRepository(User::class)->find($id);
+
+        if ($this->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error');
+        }
 
         $imagePath = $this->getParameter('images_directory') . '/' . $user->getImageFilename();
         if ($user->getImageFilename() && file_exists($imagePath)) {
