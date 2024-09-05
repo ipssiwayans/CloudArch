@@ -11,23 +11,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/file')]
 class FileController extends AbstractController
 {
-    private Security $security;
-
-    public function __construct(Security $security)
-    {
-        $this->security = $security;
-    }
-
     #[Route('/', name: 'app_file')]
     public function index(FileManager $fileManager): Response
     {
-        $user = $this->security->getUser();
+        $user = $this->getUser();
 
         $files = $fileManager->getUserFiles();
 
@@ -42,9 +34,8 @@ class FileController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         Security $security,
-        SessionInterface $session
     ): Response {
-        $user = $this->security->getUser();
+        $user = $this->getUser();
 
         $fileEntity = new File();
         $form = $this->createForm(AddFileType::class, $fileEntity);
@@ -85,7 +76,11 @@ class FileController extends AbstractController
     #[Route('/edit/{id}', name: 'app_edit_file', methods: ['GET', 'POST'])]
     public function edit(Request $request, File $file, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->security->getUser();
+        $user = $this->getUser();
+
+        if ($file->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error');
+        }
 
         $oldFileName = $file->getName();
         $oldFileExtension = pathinfo($oldFileName, PATHINFO_EXTENSION);
@@ -121,6 +116,10 @@ class FileController extends AbstractController
     #[Route('/delete/{id}', name: 'app_delete_file', methods: ['POST'])]
     public function delete(File $file, EntityManagerInterface $entityManager): Response
     {
+        if ($file->getUser() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error');
+        }
+
         $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $file->getName();
         if (file_exists($filePath)) {
             unlink($filePath);
@@ -136,6 +135,12 @@ class FileController extends AbstractController
     #[Route('/download/{id}', name: 'app_download_file', methods: ['GET'])]
     public function download(File $file): Response
     {
+        $user = $this->getUser();
+
+        if ($file->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error');
+        }
+
         $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $file->getName();
         if (file_exists($filePath)) {
             return $this->file($filePath, $file->getName());

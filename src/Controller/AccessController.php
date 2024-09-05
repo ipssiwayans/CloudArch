@@ -12,7 +12,6 @@ use App\Service\PaymentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Exception\ApiErrorException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,18 +26,15 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AccessController extends AbstractController
 {
-    private Security $security;
     private Filesystem $filesystem;
     private PaymentService $paymentService;
     private EmailService $emailService;
 
     public function __construct(
-        Security $security,
         Filesystem $filesystem,
         PaymentService $paymentService,
         EmailService $emailService
     ) {
-        $this->security = $security;
         $this->filesystem = $filesystem;
         $this->paymentService = $paymentService;
         $this->emailService = $emailService;

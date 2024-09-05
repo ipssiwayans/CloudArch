@@ -14,7 +14,7 @@ use Twig\Environment;
 #[Route('/invoice')]
 class InvoiceController extends AbstractController
 {
-    #[Route('/all', name: 'app_invoice_all')]
+    #[Route('/', name: 'app_invoice')]
     public function allInvoice(InvoiceManager $invoiceManager): Response
     {
         $invoices = $invoiceManager->getInvoiceByUser($this->getUser());
@@ -30,6 +30,10 @@ class InvoiceController extends AbstractController
         $invoice = $invoiceManager->getInvoiceById($id);
         $user = $this->getUser();
 
+        if ($invoice->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error');
+        }
+
         return $this->render('invoice/show.html.twig', [
             'user' => $user,
             'invoice' => $invoice,
@@ -41,8 +45,8 @@ class InvoiceController extends AbstractController
     {
         $invoice = $invoiceManager->getInvoiceById($id);
 
-        if ($invoice->getUser() !== $this->getUser()) {
-            throw $this->createAccessDeniedException();
+        if ($invoice->getUser() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error');
         }
 
         $template = $twig->load('invoice/show.html.twig');
