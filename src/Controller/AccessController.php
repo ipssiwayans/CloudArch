@@ -12,7 +12,6 @@ use App\Service\PaymentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Exception\ApiErrorException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,18 +26,15 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AccessController extends AbstractController
 {
-    private Security $security;
     private Filesystem $filesystem;
     private PaymentService $paymentService;
     private EmailService $emailService;
 
     public function __construct(
-        Security $security,
         Filesystem $filesystem,
         PaymentService $paymentService,
         EmailService $emailService
     ) {
-        $this->security = $security;
         $this->filesystem = $filesystem;
         $this->paymentService = $paymentService;
         $this->emailService = $emailService;
@@ -131,24 +127,9 @@ class AccessController extends AbstractController
         return $this->redirectToRoute('app_registration');
     }
 
-    #[Route(path: '/reset', name: 'app_reset_password')]
-    public function resetPassword(): Response
-    {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-        $user = $this->getUser();
-
-        return $this->render('access/reset.html.twig');
-    }
-
     #[Route('/profile', name: 'app_profile')]
     public function profile(FileManager $fileManager): Response
     {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-
         $user = $this->getUser();
 
         $totalFiles = $fileManager->getTotalFilesByUser($user);
@@ -172,15 +153,10 @@ class AccessController extends AbstractController
     #[Route('/update/{id}', name: 'app_update')]
     public function update(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator, int $id): Response
     {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-        $loggedInUser = $this->getUser();
-
         $user = $entityManager->getRepository(User::class)->find($id);
         $countries = Countries::getNames();
 
-        if ($loggedInUser !== $user && !$this->isGranted('ROLE_ADMIN')) {
+        if ($this->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error');
         }
 
@@ -247,11 +223,11 @@ class AccessController extends AbstractController
     #[Route('/delete/{id}', name: 'app_delete')]
     public function delete(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, SessionInterface $session, int $id): Response
     {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('app_login');
-        }
-
         $user = $entityManager->getRepository(User::class)->find($id);
+
+        if ($this->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error');
+        }
 
         $imagePath = $this->getParameter('images_directory') . '/' . $user->getImageFilename();
         if ($user->getImageFilename() && file_exists($imagePath)) {

@@ -3,20 +3,20 @@
 namespace App\Controller;
 
 use App\Manager\InvoiceManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Attribute\Route;
 use Twig\Environment;
 
 #[Route('/invoice')]
 class InvoiceController extends AbstractController
 {
-    #[Route('/all', name: 'app_invoice_all')]
-    public function allInvoice(Session $session, InvoiceManager $invoiceManager): Response
+    #[Route('/', name: 'app_invoice')]
+    public function allInvoice(InvoiceManager $invoiceManager): Response
     {
         $invoices = $invoiceManager->getInvoiceByUser($this->getUser());
 
@@ -26,10 +26,17 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_invoice_show')]
-    public function showInvoice(InvoiceManager $invoiceManager, int $id): Response
-    {
+    public function showInvoice(
+        EntityManagerInterface $entityManager,
+        InvoiceManager $invoiceManager,
+        int $id
+    ): Response {
         $invoice = $invoiceManager->getInvoiceById($id);
-        $user = $this->getUser();
+        $user = $invoice->getUser();
+
+        if ($this->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error');
+        }
 
         return $this->render('invoice/show.html.twig', [
             'user' => $user,
@@ -42,8 +49,8 @@ class InvoiceController extends AbstractController
     {
         $invoice = $invoiceManager->getInvoiceById($id);
 
-        if ($invoice->getUser() !== $this->getUser()) {
-            throw $this->createAccessDeniedException();
+        if ($invoice->getUser() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_error');
         }
 
         $template = $twig->load('invoice/show.html.twig');
