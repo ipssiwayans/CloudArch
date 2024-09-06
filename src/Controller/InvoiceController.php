@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Manager\InvoiceManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,12 +26,15 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_invoice_show')]
-    public function showInvoice(InvoiceManager $invoiceManager, int $id): Response
-    {
+    public function showInvoice(
+        EntityManagerInterface $entityManager,
+        InvoiceManager $invoiceManager,
+        int $id
+    ): Response {
         $invoice = $invoiceManager->getInvoiceById($id);
-        $user = $this->getUser();
+        $user = $invoice->getUser();
 
-        if ($invoice->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+        if ($this->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_error');
         }
 
