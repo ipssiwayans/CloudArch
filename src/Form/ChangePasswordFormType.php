@@ -29,8 +29,8 @@ class ChangePasswordFormType extends AbstractType
                             'message' => 'Veuillez entrer un mot de passe',
                         ]),
                         new Regex([
-                            'pattern' => '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
-                            'message' => 'Le mot de passe doit contenir au moins 8 caractères et inclure au moins une lettre et un chiffre.',
+                            'pattern' => '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/',
+                            'message' => 'Le mot de passe doit contenir au moins 8 caractères et inclure au moins une lettre majuscule et un chiffre.',
                         ]),
                     ],
                     'label' => 'Nouveau mot de passe',
@@ -39,8 +39,6 @@ class ChangePasswordFormType extends AbstractType
                     'label' => 'Confirmer le mot de passe',
                 ],
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
-                // Instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'mapped' => false,
             ]);
     }
