@@ -33,7 +33,6 @@ class FileController extends AbstractController
     public function add_file(
         Request $request,
         EntityManagerInterface $entityManager,
-        Security $security,
     ): Response {
         $user = $this->getUser();
 
@@ -41,30 +40,27 @@ class FileController extends AbstractController
         $form = $this->createForm(AddFileType::class, $fileEntity);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $file = $form->get('file')->getData();
-                if ($file) {
-                    $fileEntity->setName($file->getClientOriginalName());
-                    $fileEntity->setSize($file->getSize());
-                    $fileEntity->setFormat($file->getMimeType());
-                    $fileEntity->setCreation(new \DateTime('now'));
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('file')->getData();
+            if ($file) {
+                $fileEntity->setName($file->getClientOriginalName());
+                $fileEntity->setSize($file->getSize());
+                $fileEntity->setFormat($file->getMimeType());
+                $fileEntity->setCreation(new \DateTime('now'));
 
-                    $currentUser = $security->getUser();
-                    $fileEntity->setUser($currentUser);
+                $fileEntity->setUser($user);
 
-                    $destination = $this->getParameter('kernel.project_dir') . '/public/uploads';
-                    $file->move($destination, $file->getClientOriginalName());
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads';
+                $file->move($destination, $file->getClientOriginalName());
 
-                    $entityManager->persist($fileEntity);
-                    $entityManager->flush();
+                $entityManager->persist($fileEntity);
+                $entityManager->flush();
 
-                    $this->addFlash('success', 'Fichier téléchargé avec succès');
+                $this->addFlash('success', 'Fichier téléchargé avec succès');
 
-                    return $this->redirectToRoute('app_file');
-                }
-                $this->addFlash('danger', 'Veuillez sélectionner un fichier');
+                return $this->redirectToRoute('app_file');
             }
+            $this->addFlash('danger', 'Veuillez sélectionner un fichier');
         }
 
         return $this->render('file/add_file.html.twig', [
